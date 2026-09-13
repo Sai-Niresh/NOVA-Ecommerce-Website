@@ -1,0 +1,329 @@
+/* ============================================================
+   NOVA E-Commerce — Animations Stylesheet
+   Keyframes + GSAP state helpers + Hover effects
+   ============================================================ */
+
+/* ─── 1. KEYFRAMES ───────────────────────────────────────── */
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.5; transform: scaleY(1); }
+  50%       { opacity: 1;   transform: scaleY(0.7); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes heartBeat {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.25); }
+  50%  { transform: scale(0.95); }
+  75%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.5; }
+}
+
+@keyframes ringExpand {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+/* ─── 2. GSAP INITIAL STATES ─────────────────────────────── */
+/* Elements that GSAP will animate — hidden by default */
+/* (GSAP sets opacity via JS, but we keep these as CSS fallback) */
+.gsap-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.gsap-reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  will-change: opacity, transform;
+}
+
+.gsap-reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  will-change: opacity, transform;
+}
+
+.gsap-fade {
+  opacity: 0;
+  will-change: opacity;
+}
+
+.gsap-scale {
+  opacity: 0;
+  transform: scale(0.94);
+  will-change: opacity, transform;
+}
+
+/* When JS is unavailable, show everything */
+.no-js .gsap-reveal,
+.no-js .gsap-reveal-left,
+.no-js .gsap-reveal-right,
+.no-js .gsap-fade,
+.no-js .gsap-scale {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─── 3. PAGE LOAD SKELETON ──────────────────────────────── */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  background: var(--nova-black);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
+  pointer-events: none;
+}
+
+.page-loader.is-complete {
+  visibility: hidden;
+}
+
+.loader-logo {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--nova-white);
+  opacity: 0;
+}
+
+.loader-bar-track {
+  width: 120px;
+  height: 2px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loader-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--nova-accent);
+  border-radius: 2px;
+  transition: width 0.4s var(--ease-out-expo, cubic-bezier(0.19,1,0.22,1));
+}
+
+/* ─── 4. MAGNETIC BUTTON ─────────────────────────────────── */
+.magnetic-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  will-change: transform;
+}
+
+.magnetic-btn .btn-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  transition: gap 0.3s var(--ease-premium, cubic-bezier(0.23,1,0.32,1));
+}
+
+.magnetic-btn:hover .btn-inner {
+  gap: 0.875rem;
+}
+
+.magnetic-btn .btn-icon {
+  transition: transform 0.3s var(--ease-premium, cubic-bezier(0.23,1,0.32,1));
+}
+
+.magnetic-btn:hover .btn-icon {
+  transform: translateX(3px);
+}
+
+/* ─── 5. HOVER UNDERLINE ─────────────────────────────────── */
+.hover-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-premium, cubic-bezier(0.23,1,0.32,1));
+}
+
+.hover-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ─── 6. SHIMMER SKELETON ────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--nova-gray-100) 25%,
+    var(--nova-gray-200) 50%,
+    var(--nova-gray-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm, 4px);
+}
+
+/* ─── 7. WISHLIST HEART ANIMATION ────────────────────────── */
+.wishlist-activated {
+  animation: heartBeat 0.4s ease-in-out;
+  color: #e11d48 !important;
+}
+
+/* ─── 8. SCROLL PROGRESS BAR ─────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--nova-accent, #c8a96e);
+  z-index: 9999;
+  width: 0%;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* ─── 9. CART FEEDBACK ───────────────────────────────────── */
+.cart-feedback {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--nova-black);
+  color: var(--nova-white);
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-base, 8px);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 600;
+  box-shadow: var(--shadow-xl);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: transform 0.4s var(--ease-premium, cubic-bezier(0.23,1,0.32,1)),
+              opacity 0.4s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: var(--z-modal, 400);
+  pointer-events: none;
+  max-width: 320px;
+}
+
+.cart-feedback.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ─── 10. IMAGE HOVER SHINE EFFECT ───────────────────────── */
+.img-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.img-shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.15) 50%,
+    transparent 60%
+  );
+  z-index: 5;
+  transition: left 0.6s var(--ease-out-expo, cubic-bezier(0.19,1,0.22,1));
+  pointer-events: none;
+}
+
+.img-shine:hover::before {
+  left: 150%;
+}
+
+/* ─── 11. SECTION REVEAL CLASSES (for ScrollTrigger) ──── */
+.sr-item {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.sr-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s var(--ease-out-expo, cubic-bezier(0.19,1,0.22,1)),
+              transform 0.7s var(--ease-out-expo);
+}
+
+/* ─── 12. PARALLAX WRAPPER ───────────────────────────────── */
+.parallax-img-wrapper {
+  overflow: hidden;
+  will-change: transform;
+}
+
+.parallax-img-wrapper img {
+  will-change: transform;
+}
+
+/* ─── 13. LOADING SPINNER ────────────────────────────────── */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: var(--nova-white);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── 14. REDUCED MOTION OVERRIDES ──────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .gsap-reveal,
+  .gsap-reveal-left,
+  .gsap-reveal-right,
+  .gsap-fade,
+  .gsap-scale,
+  .sr-item,
+  .loader-bar,
+  .scroll-line {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .page-loader {
+    display: none !important;
+  }
+  .img-shine::before {
+    display: none;
+  }
+}
