@@ -474,7 +474,7 @@ function dSizes($r){ $d=json_decode($r,true); return is_array($d)?$d:[]; }
         <?php $dashProducts = array_slice($adminProducts, 0, 6); ?>
         <?php foreach ($dashProducts as $p): ?>
         <div class="admin-product-card">
-          <img class="admin-product-thumb" src="<?= htmlspecialchars($p['image']) ?>" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" onerror="this.style.opacity='0.25';">
+          <img class="admin-product-thumb" src="<?= htmlspecialchars(nova_product_image_url($p['image'] ?? '')) ?>" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" onerror="this.style.opacity='0.25';">
           <div class="prod-name"><?= htmlspecialchars($p['name']) ?></div>
           <div class="prod-meta"><?= htmlspecialchars($p['category']) ?> &middot; &#8377;<?= number_format((float)$p['price'],2) ?>
             <?php if (!empty($p['badge'])): ?><span class="admin-tag"><?= htmlspecialchars($p['badge']) ?></span><?php endif; ?>
@@ -567,7 +567,7 @@ function dSizes($r){ $d=json_decode($r,true); return is_array($d)?$d:[]; }
             <div class="admin-form-card">
               <h3>Images & Inventory</h3>
               <label>Primary Image URL or Path (optional)</label>
-              <div class="admin-image-preview" id="preview-wrap-primary"><img id="preview-primary" alt="Primary image preview"<?= $editProduct ? ' src="' . htmlspecialchars($editProduct['image']) . '"' : ' src="images/placeholder.svg"' ?>></div>
+              <div class="admin-image-preview" id="preview-wrap-primary"><img id="preview-primary" alt="Primary image preview"<?= $editProduct ? ' src="' . htmlspecialchars(nova_product_image_url($editProduct['image'] ?? '')) . '"' : ' src="images/placeholder.svg"' ?>></div>
               <input type="text" name="image" id="input-image" value="<?= $editProduct ? htmlspecialchars($editProduct['image']) : '' ?>" placeholder="https://images.unsplash.com/... or images/jacket.jpg">
               <p class="form-hint">Optional — leave empty to auto-use the placeholder, or upload a file below instead. Preview updates as you type.</p>
 
@@ -576,7 +576,7 @@ function dSizes($r){ $d=json_decode($r,true); return is_array($d)?$d:[]; }
               <p class="form-hint">Uploading a file overrides the URL/path above. JPG, PNG, WebP or GIF, max 4&nbsp;MB. Saved to <code>uploads/</code>.</p>
 
               <label>Secondary Image URL (Hover)</label>
-              <div class="admin-image-preview" id="preview-wrap-secondary"><img id="preview-secondary" alt="Secondary image preview"<?= $editProduct && $editProduct['secondary_image'] ? ' src="' . htmlspecialchars($editProduct['secondary_image']) . '"' : '' ?>></div>
+              <div class="admin-image-preview" id="preview-wrap-secondary"><img id="preview-secondary" alt="Secondary image preview"<?= $editProduct && $editProduct['secondary_image'] ? ' src="' . htmlspecialchars(nova_product_image_url($editProduct['secondary_image'])) . '"' : '' ?>></div>
               <input type="text" name="secondary_image" id="input-secondary-image" value="<?= $editProduct && $editProduct['secondary_image'] ? htmlspecialchars($editProduct['secondary_image']) : '' ?>" placeholder="https://images.unsplash.com/... (optional)">
 
               <label>Stock Quantity *</label>
@@ -629,7 +629,7 @@ function dSizes($r){ $d=json_decode($r,true); return is_array($d)?$d:[]; }
       <div class="admin-product-grid">
         <?php foreach ($adminProducts as $p): ?>
         <div class="admin-product-card">
-          <img class="admin-product-thumb" src="<?= htmlspecialchars($p['image']) ?>" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" onerror="this.src='https://placehold.co/400x300?text=No+Image';">
+          <img class="admin-product-thumb" src="<?= htmlspecialchars(nova_product_image_url($p['image'] ?? '')) ?>" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" onerror="this.src='https://placehold.co/400x300?text=No+Image';">
           <div class="prod-name"><?= htmlspecialchars($p['name']) ?></div>
           <div class="prod-meta">
             <strong><?= htmlspecialchars($p['category']) ?></strong> &middot; &#8377;<?= number_format((float)$p['price'], 2) ?>

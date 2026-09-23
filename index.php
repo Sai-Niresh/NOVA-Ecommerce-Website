@@ -40,7 +40,7 @@ function productCard(array $p): string {
   }
 
   // Image
-  $html .= '    <img class="product-img product-img-primary" src="' . htmlspecialchars($p['image']) . '" alt="' . htmlspecialchars($p['name']) . '" loading="lazy" width="400" height="500">';
+  $html .= '    <img class="product-img product-img-primary" src="' . htmlspecialchars(function_exists('nova_product_image_url') ? nova_product_image_url($p['image'] ?? '') : ($p['image'] ?? '')) . '" alt="' . htmlspecialchars($p['name']) . '" loading="lazy" width="400" height="500">';
 
   // Wishlist
   $html .= '    <button class="product-wishlist-btn" data-id="' . $id . '" aria-label="Add ' . htmlspecialchars($p['name']) . ' to wishlist">';

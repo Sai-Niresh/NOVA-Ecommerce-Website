@@ -759,6 +759,44 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
     return $palette[abs(crc32($key)) % count($palette)];
   }
 
+  /**
+   * Build a browser src from a products.image / secondary_image value.
+   * Keeps remote http(s) and data: URIs. Turns Windows absolute paths,
+   * file:// URLs, and localhost URLs into web-root-relative paths
+   * (uploads/... or images/...) so the same DB row works on XAMPP and Vercel.
+   */
+  function nova_product_image_url(?string $src): string {
+    $src = trim((string) $src);
+    if ($src === '') {
+      return 'images/placeholder.svg';
+    }
+    if (stripos($src, 'data:') === 0) {
+      return $src;
+    }
+
+    $path = $src;
+    if (preg_match('#^(https?:)?//#i', $src)) {
+      $parts = parse_url($src);
+      $host = strtolower((string) ($parts['host'] ?? ''));
+      if (!in_array($host, ['localhost', '127.0.0.1', '::1'], true)) {
+        return $src;
+      }
+      $path = (string) ($parts['path'] ?? '');
+    }
+
+    $path = str_replace('\\', '/', $path);
+    $path = preg_replace('#^file:/+#i', '', $path) ?? $path;
+    $path = preg_replace('#^[A-Za-z]:/#', '', $path) ?? $path;
+
+    if (preg_match('#/(uploads|images)/(.+)$#i', '/' . ltrim($path, '/'), $m)) {
+      return strtolower($m[1]) . '/' . $m[2];
+    }
+
+    $path = ltrim($path, '/');
+    $path = preg_replace('#^(?:htdocs/)?NOVA-Ecommerce/#i', '', $path) ?? $path;
+    return $path !== '' ? $path : 'images/placeholder.svg';
+  }
+
   function getDatabaseProducts(): ?array {
     global $NOVA_PRODUCTS;
     static $loaded = false;
@@ -792,6 +830,10 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
         $row['reviews'] = (int) $row['reviews'];
         $row['stock'] = (int) $row['stock'];
         $row['featured'] = (bool) $row['featured'];
+        $row['image'] = nova_product_image_url($row['image'] ?? '');
+        $row['secondary_image'] = ($row['secondary_image'] !== null && trim((string) $row['secondary_image']) !== '')
+          ? nova_product_image_url($row['secondary_image'])
+          : null;
         $row['colors'] = nova_normalize_colors($row['colors_json'] ?? '');
         $row['sizes'] = json_decode($row['sizes_json'] ?: '[]', true) ?: [];
         unset($row['colors_json'], $row['sizes_json']);

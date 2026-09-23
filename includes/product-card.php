@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../config/constants.php';
+require_once __DIR__ . '/products-data.php';
 
 if (!function_exists('renderProductCard')) {
   /**
@@ -18,7 +19,10 @@ if (!function_exists('renderProductCard')) {
     $sym     = NOVA_CURRENCY_SYMBOL;
     $hasDisc = isset($p['original_price']) && $p['original_price'] > $p['price'];
     $disc    = $hasDisc ? (isset($p['discount']) ? $p['discount'] : round((($p['original_price'] - $p['price']) / $p['original_price']) * 100)) : 0;
-    $secImg  = !empty($p['secondary_image']) ? $p['secondary_image'] : $p['image'];
+    $img     = function_exists('nova_product_image_url') ? nova_product_image_url($p['image'] ?? '') : (string) ($p['image'] ?? '');
+    $secImg  = !empty($p['secondary_image'])
+      ? (function_exists('nova_product_image_url') ? nova_product_image_url($p['secondary_image']) : (string) $p['secondary_image'])
+      : $img;
 
     $html  = '<article class="product-card" data-product-id="' . $p['id'] . '" data-category="' . htmlspecialchars($p['category']) . '" data-price="' . $p['price'] . '" data-rating="' . $p['rating'] . '" aria-label="' . htmlspecialchars($p['name']) . '">';
     $html .= '  <div class="product-image-wrapper">';
@@ -32,8 +36,8 @@ if (!function_exists('renderProductCard')) {
     }
 
     // Images (Primary + Secondary for hover effect)
-    $html .= '    <img class="product-img product-img-primary" src="' . htmlspecialchars($p['image']) . '" alt="' . htmlspecialchars($p['name']) . '" loading="lazy" width="400" height="500">';
-    if ($secImg !== $p['image']) {
+    $html .= '    <img class="product-img product-img-primary" src="' . htmlspecialchars($img) . '" alt="' . htmlspecialchars($p['name']) . '" loading="lazy" width="400" height="500">';
+    if ($secImg !== $img) {
       $html .= '    <img class="product-img product-img-secondary" src="' . htmlspecialchars($secImg) . '" alt="' . htmlspecialchars($p['name']) . ' alt view" loading="lazy" width="400" height="500">';
     }
 
