@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['action'] ?? '') === 'logi
             }
         }
     } catch (Throwable $e) {
-        $loginError = 'Database connection failed. Start MySQL in XAMPP.';
+        $loginError = 'DEBUG: ' . $e->getMessage();
     }
 }
 

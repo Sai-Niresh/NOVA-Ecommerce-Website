@@ -181,5 +181,5 @@ try {
   authResponse(false, 'Unknown authentication action.');
 } catch (Throwable $error) {
   error_log('NOVA auth error: ' . $error->getMessage());
-  authResponse(false, 'Database connection failed. Start MySQL in XAMPP and try again.');
+  authResponse(false, 'DEBUG: ' . $error->getMessage());
 }
