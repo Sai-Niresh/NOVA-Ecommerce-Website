@@ -1,0 +1,23 @@
+# ─────────────────────────────────────────────────────────────
+# NOVA E-Commerce — git ignore rules
+# Keeps secrets and local-only dev scripts out of version control.
+# These files stay on disk; they are simply never committed.
+# ─────────────────────────────────────────────────────────────
+
+# ── Secrets / environment files (never commit real credentials) ──
+.env
+.env.*
+!.env.example
+
+# ── Composer / Node dependencies (not part of this plain-PHP project) ──
+/vendor/
+node_modules/
+
+# ── Logs ──
+*.log
+
+# ── Local-only debug + maintenance scripts (contain hardcoded dev credentials) ──
+test_*.php
+check_*.php
+admin_backup.php
+migrate_products_table.php

@@ -1,0 +1,44 @@
+# ─────────────────────────────────────────────────────────────
+# NOVA E-Commerce — Apache configuration (XAMPP / production)
+# Note: PHP's built-in dev server ignores this file; it applies
+# when the project is served through Apache (XAMPPhtdocs or a
+# shared host).
+# ─────────────────────────────────────────────────────────────
+
+Options -Indexes
+
+# ─── Security headers ────────────────────────────────────────
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set X-XSS-Protection "0"
+</IfModule>
+
+# ─── Never serve dotfiles / git metadata ─────────────────────
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+# ─── Compression ─────────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
+    application/javascript application/json application/xml image/svg+xml
+</IfModule>
+
+# ─── Static asset caching ────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg  "access plus 1 month"
+  ExpiresByType image/png   "access plus 1 month"
+  ExpiresByType image/webp  "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/avif  "access plus 1 month"
+  ExpiresByType text/css    "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+  ExpiresByType font/woff2  "access plus 1 year"
+</IfModule>
+
+# ─── Friendly error page ─────────────────────────────────────
+ErrorDocument 404 /NOVA-Ecommerce/index.php

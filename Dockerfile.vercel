@@ -1,0 +1,40 @@
+# ─────────────────────────────────────────────────────────────
+# NOVA E-Commerce — Dockerfile.vercel
+# Vercel container deployment (current supported approach):
+#   FrankenPHP = Caddy web server + PHP runtime in one binary/image.
+# Same PHP major/minor as the local XAMPP runtime (PHP 8.2),
+# so the existing application code runs unchanged.
+# ─────────────────────────────────────────────────────────────
+FROM dunglas/frankenphp:1-php8.2-alpine
+
+WORKDIR /app
+
+# Extensions genuinely required by the existing NOVA codebase:
+#   pdo_mysql : config/database.php connects with PDO using the mysql: driver
+#   mbstring  : auth.php (mb_strlen), includes/header.php (mb_substr/mb_strtoupper)
+# Everything else NOVA uses (PDO, session, openssl, fileinfo, ctype, tokenizer,
+# hash, json, zlib) is already compiled into this base image, so it is not
+# re-installed here.
+RUN install-php-extensions pdo_mysql mbstring
+
+# The admin panel accepts product images up to 4 MB (admin.php), which is above
+# PHP's stock 2 MB upload limit — raise it so uploads keep working in the container.
+#
+# output_buffering=4096 mirrors the local XAMPP php.ini. It is required here:
+# every NOVA page prints its <!DOCTYPE html> before includes/header.php runs
+# nova_session_start(), so without buffering PHP cannot send the session cookie
+# ("headers already sent") and logins/CSRF tokens would silently fail.
+RUN printf '%s\n' 'upload_max_filesize=8M' 'post_max_size=10M' 'memory_limit=256M' 'max_execution_time=60' 'output_buffering=4096' 'date.timezone=UTC' > /usr/local/etc/php/conf.d/nova.ini
+
+# FrankenPHP/Caddy server config (listens on $PORT).
+COPY Caddyfile /etc/caddy/Caddyfile
+
+# Application source. Local-only files are excluded via .dockerignore.
+# The application root is the document root, so /app serves index.php by default.
+COPY . /app
+
+# Vercel injects its own PORT at runtime (which overrides this default).
+ENV PORT=80
+
+# Start FrankenPHP with the NOVA Caddyfile; it binds to $PORT.
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]

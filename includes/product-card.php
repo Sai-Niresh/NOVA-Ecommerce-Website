@@ -82,15 +82,35 @@ if (!function_exists('renderProductCard')) {
     $html .= '    </div>';
 
     // Color swatches hint (if available)
-    if (!empty($p['colors'])) {
-      $html .= '    <div class="product-color-preview" aria-label="Available colors">';
-      foreach (array_slice($p['colors'], 0, 4) as $col) {
-        $html .= '      <span class="color-dot" style="background-color: ' . htmlspecialchars($col['hex']) . '" title="' . htmlspecialchars($col['name']) . '"></span>';
+    // Colors may arrive as objects, plain names or hex strings — never assume an array.
+    if (!empty($p['colors']) && is_array($p['colors'])) {
+      $swatches = [];
+      foreach ($p['colors'] as $col) {
+        if (is_array($col)) {
+          $cName = (string) ($col['name'] ?? ($col['hex'] ?? ''));
+          $cHex  = (string) ($col['hex'] ?? '');
+        } else {
+          $cName = (string) $col;
+          $cHex  = '';
+        }
+        if ($cName === '' && $cHex === '') continue;
+        if ($cHex === '' && preg_match('/^#?[0-9a-fA-F]{3}$|^#?[0-9a-fA-F]{6}$/', trim($cName))) {
+          $cHex = strpos(trim($cName), '#') === 0 ? trim($cName) : '#' . trim($cName);
+        }
+        if ($cHex === '') $cHex = '#cccccc';
+        if ($cName === '') $cName = $cHex;
+        $swatches[] = ['name' => $cName, 'hex' => $cHex];
       }
-      if (count($p['colors']) > 4) {
-        $html .= '      <span class="color-dot-more">+' . (count($p['colors']) - 4) . '</span>';
+      if (!empty($swatches)) {
+        $html .= '    <div class="product-color-preview" aria-label="Available colors">';
+        foreach (array_slice($swatches, 0, 4) as $col) {
+          $html .= '      <span class="color-dot" style="background-color: ' . htmlspecialchars($col['hex']) . '" title="' . htmlspecialchars($col['name']) . '"></span>';
+        }
+        if (count($swatches) > 4) {
+          $html .= '      <span class="color-dot-more">+' . (count($swatches) - 4) . '</span>';
+        }
+        $html .= '    </div>';
       }
-      $html .= '    </div>';
     }
 
     // Add to Cart Button

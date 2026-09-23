@@ -1,0 +1,31 @@
+# ─────────────────────────────────────────────────────────────
+# NOVA E-Commerce — .dockerignore
+# Keeps local XAMPP-only files, secrets and VCS data out of the
+# image built for Vercel. The application itself (PHP, css/, js/,
+# images/, uploads/, config/, includes/) is NOT excluded.
+# ─────────────────────────────────────────────────────────────
+
+# ── Version control ──
+.git
+.gitignore
+.gitattributes
+
+# ── Secrets / environment files (never bake credentials into the image) ──
+.env
+.env.*
+
+# ── Editor / OS junk ──
+.vscode
+.idea
+Thumbs.db
+*.swp
+
+# ── Local-only debug + maintenance scripts (not part of the storefront) ──
+test_*.php
+check_*.php
+admin_backup.php
+migrate_products_table.php
+
+# ── Node / build tooling (not used by this plain-PHP project) ──
+node_modules
+npm-debug.log*

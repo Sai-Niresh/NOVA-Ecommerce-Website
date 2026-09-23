@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/config/bootstrap.php';
 
-session_start();
+nova_session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -48,21 +49,28 @@ if (!in_array($paymentMethod, ['upi', 'card', 'cod'], true)) {
 
 try {
   $db = novaDb();
+  require_once __DIR__ . '/includes/products-data.php';
+
   $cleanItems = [];
   $total = 0;
 
+  /* SECURITY: never trust client prices — re-price every item from the
+     database and validate stock inside the same transaction. */
   foreach ($items as $item) {
     $id = (int) ($item['id'] ?? 0);
-    $itemName = trim((string) ($item['name'] ?? ''));
-    $price = (float) ($item['price'] ?? 0);
-    $quantity = max(1, (int) ($item['quantity'] ?? 1));
-    if ($id <= 0 || $itemName === '' || $price < 0) continue;
-    $cleanItems[] = [$id, $itemName, $price, $quantity];
-    $total += $price * $quantity;
+    $quantity = max(1, min(99, (int) ($item['quantity'] ?? 1)));
+    if ($id <= 0) continue;
+
+    $product = getProductById($id);
+    if (!$product || (int) $product['stock'] < $quantity) continue;
+
+    $unitPrice = (float) $product['price'];
+    $cleanItems[] = [$id, $product['name'], $unitPrice, $quantity];
+    $total += $unitPrice * $quantity;
   }
 
   if (!$cleanItems || $total <= 0) {
-    orderResponse(false, 'Your cart contains no valid products.');
+    orderResponse(false, 'Your cart contains no available products.');
   }
 
   $db->beginTransaction();
@@ -71,8 +79,13 @@ try {
   $insertOrder->execute([$userId, $name, $phone, $address, $city, $postal, $paymentMethod, $total]);
   $orderId = (int) $db->lastInsertId();
   $insertItem = $db->prepare('INSERT INTO order_items (order_id, product_id, product_name, unit_price, quantity) VALUES (?, ?, ?, ?, ?)');
+  $updateStock = $db->prepare('UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?');
   foreach ($cleanItems as [$id, $itemName, $price, $quantity]) {
     $insertItem->execute([$orderId, $id, $itemName, $price, $quantity]);
+    $updateStock->execute([$quantity, $id, $quantity]);
+    if ($updateStock->rowCount() === 0) {
+      throw new RuntimeException('Stock changed during checkout for product #' . $id);
+    }
   }
   $db->commit();
   orderResponse(true, 'Order placed successfully.', ['order_id' => $orderId, 'total' => $total]);

@@ -21,6 +21,8 @@ $totalCount  = count($allProducts);
   <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   
   <!-- GSAP & ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -247,7 +249,7 @@ $totalCount  = count($allProducts);
           <!-- Pagination / Load More -->
           <div class="shop-pagination-wrap">
             <button type="button" class="btn btn-outline load-more-btn" id="load-more-btn">
-              Load More Products
+              LOAD MORE
             </button>
           </div>
 

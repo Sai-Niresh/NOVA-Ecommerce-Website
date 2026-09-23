@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────────────────────
+# NOVA E-Commerce — Caddyfile (FrankenPHP, used by Vercel container)
+# The site address binds FrankenPHP to the PORT that Vercel injects
+# at runtime, falling back to 80 for local Docker runs.
+# ─────────────────────────────────────────────────────────────
+
+:{$PORT:80} {
+	# The NOVA application root IS the document root: index.php, shop.php,
+	# category.php, product.php, cart.php, checkout.php, admin.php all sit
+	# at the top level (there is no public/ subfolder), so the existing
+	# URL structure is preserved exactly.
+	root * /app
+
+	encode zstd gzip
+
+	# Security headers — parity with the project's Apache .htaccess,
+	# which Caddy does not read.
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-X-Powered-By
+	}
+
+	# Caddy ignores .htaccess, so the paths that the local Apache config /
+	# robots.txt keep private must be blocked here. Without this, files such
+	# as .env (database credentials) or vendor sources could be downloaded.
+	# (All patterns on one line: the Caddyfile has no line-continuation syntax.)
+	@blocked path /.env* /.git* /.htaccess /.dockerignore /.gitattributes /.gitignore /Dockerfile* /vercel.json /Caddyfile /README.md /config/* /includes/* /test_*.php /check_*.php /migrate_*.php /admin_backup.php
+	respond @blocked 404
+
+	# uploads/ stores user-uploaded product images only — never execute PHP there.
+	@uploadsPhp path /uploads/*.php
+	respond @uploadsPhp 404
+
+	# php_server = execute *.php with the embedded PHP runtime AND serve the
+	# remaining static files (css/, js/, images/, uploads/) from the same root.
+	# Directories resolve to index.php automatically, so "/" runs index.php.
+	php_server
+}

@@ -8,6 +8,8 @@
 /* ─── REDUCED MOTION ─────────────────────────────────────── */
 const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isTouchDevice   = () => window.matchMedia('(hover: none)').matches;
+/* Root fix: never let a failed GSAP CDN throw and kill later modules. */
+const hasGsapGlobal   = typeof gsap !== 'undefined';
 
 /* ─── 1. CUSTOM CURSOR ───────────────────────────────────── */
 (function initCursor() {
@@ -67,7 +69,7 @@ const isTouchDevice   = () => window.matchMedia('(hover: none)').matches;
 
 /* ─── 2. MAGNETIC BUTTONS ────────────────────────────────── */
 (function initMagnetic() {
-  if (isReducedMotion || isTouchDevice()) return;
+  if (isReducedMotion || isTouchDevice() || !hasGsapGlobal) return;
 
   const magnetics = document.querySelectorAll('.magnetic-btn');
 
@@ -104,19 +106,31 @@ document.addEventListener('click', (e) => {
   if (!btn) return;
 
   const isActive = btn.classList.contains('is-active');
-  const icon     = btn.querySelector('svg');
+  const productId = btn.dataset.id;
+  const icon = btn.querySelector('svg');
 
   if (!isActive) {
     btn.classList.add('is-active');
-    if (icon) icon.style.fill = '#e11d48';
-    icon?.classList.add('wishlist-activated');
-    setTimeout(() => icon?.classList.remove('wishlist-activated'), 500);
-
+    Nova.wishlist.add(String(productId));
+    if (icon) {
+      icon.style.fill = '#e11d48';
+      icon?.classList.add('wishlist-activated');
+      setTimeout(() => icon?.classList.remove('wishlist-activated'), 500);
+    }
     // Particle burst
-    if (!isReducedMotion) spawnHeartParticles(btn);
+    if (!isReducedMotion && hasGsapGlobal) spawnHeartParticles(btn);
   } else {
     btn.classList.remove('is-active');
-    if (icon) icon.style.fill = 'none';
+    Nova.wishlist.delete(String(productId));
+    if (icon) {
+      icon.style.fill = '';
+      icon?.classList.remove('wishlist-activated');
+    }
+  }
+
+  // Update wishlist panel if open
+  if (headerPanel?.classList.contains('is-visible') && headerPanelTitle?.textContent === 'Your Wishlist') {
+    renderWishlistPanel();
   }
 });
 
@@ -159,7 +173,7 @@ function spawnHeartParticles(btn) {
 
 /* ─── 4. CATEGORY CARD HOVER (GSAP enhanced) ─────────────── */
 (function initCategoryHover() {
-  if (isReducedMotion) return;
+  if (isReducedMotion || !hasGsapGlobal) return;
 
   document.querySelectorAll('.category-card').forEach(card => {
     const img    = card.querySelector('.category-card-img');
@@ -182,7 +196,7 @@ function spawnHeartParticles(btn) {
 
 /* ─── 5. PRODUCT CARD TILT (subtle, desktop only) ────────── */
 (function initCardTilt() {
-  if (isReducedMotion || isTouchDevice()) return;
+  if (isReducedMotion || isTouchDevice() || !hasGsapGlobal) return;
 
   document.querySelectorAll('.product-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
@@ -212,7 +226,7 @@ function spawnHeartParticles(btn) {
 
 /* ─── 6. CTA HERO BUTTON HOVER ───────────────────────────── */
 (function initHeroBtn() {
-  if (isReducedMotion) return;
+  if (isReducedMotion || !hasGsapGlobal) return;
 
   const heroBtn = document.querySelector('.hero-cta-group .magnetic-btn');
   if (!heroBtn) return;
@@ -241,8 +255,8 @@ function spawnHeartParticles(btn) {
 
 /* ─── 8. SEARCH OVERLAY (placeholder interaction) ────────── */
 document.getElementById('search-btn')?.addEventListener('click', () => {
-  // Phase 2: full search overlay
-  // For now, a brief visual pulse
+  if (!hasGsapGlobal) return;
+  // Brief visual pulse
   const btn = document.getElementById('search-btn');
   gsap.to(btn, { scale: 0.9, duration: 0.1, yoyo: true, repeat: 1, ease: 'power2.inOut' });
 });

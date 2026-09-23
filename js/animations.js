@@ -7,7 +7,13 @@
 'use strict';
 
 /* ─── GSAP PLUGIN REGISTRATION ───────────────────────────── */
-gsap.registerPlugin(ScrollTrigger);
+/* Root fix: never let a failed CDN take the page down with it. */
+const hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+if (hasGsap) {
+  gsap.registerPlugin(ScrollTrigger);
+} else {
+  document.documentElement.classList.add('no-gsap');
+}
 
 /* ─── REDUCED MOTION CHECK ───────────────────────────────── */
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -365,6 +371,20 @@ function initThreeHero() {
 
 /* ─── INIT ───────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  /* Graceful fallback: if GSAP failed to load, reveal all
+     scroll-reveal content and dismiss the loader so the page
+     is fully usable (fixes "blank space" / stuck loader). */
+  if (!hasGsap) {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+      loader.classList.add('is-complete');
+      loader.style.opacity = '0';
+      loader.style.pointerEvents = 'none';
+    }
+    document.querySelectorAll('.sr-item').forEach((el) => el.classList.add('is-visible'));
+    return;
+  }
+
   runPageLoad();
   setupScrollReveals();
   setupPromoParallax();

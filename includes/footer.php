@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * NOVA — Footer Include
  * Full footer: brand, links, social, newsletter, copyright
@@ -79,10 +79,10 @@
         <ul class="footer-links" role="list">
           <li><a href="#" class="footer-link">About NOVA</a></li>
           <li><a href="#" class="footer-link">Careers</a></li>
-          <li><a href="#" class="footer-link">Privacy Policy</a></li>
-          <li><a href="#" class="footer-link">Terms of Service</a></li>
+          <li><a href="privacy-policy.php" class="footer-link">Privacy Policy</a></li>
+          <li><a href="terms-conditions.php" class="footer-link">Terms of Service</a></li>
           <li><a href="#" class="footer-link">Refund Policy</a></li>
-          <li><a href="#" class="footer-link">Cookie Policy</a></li>
+          <li><a href="cookie-policy.php" class="footer-link">Cookie Policy</a></li>
           <li><a href="admin.php" class="footer-link">Admin Login</a></li>
         </ul>
       </div>
@@ -95,9 +95,9 @@
         &copy; <?= date('Y') ?> NOVA. All rights reserved.
       </p>
       <div class="footer-bottom-links" role="list">
-        <a href="#" class="footer-bottom-link" role="listitem">Privacy</a>
-        <a href="#" class="footer-bottom-link" role="listitem">Terms</a>
-        <a href="#" class="footer-bottom-link" role="listitem">Cookies</a>
+        <a href="privacy-policy.php" class="footer-bottom-link" role="listitem">Privacy</a>
+        <a href="terms-conditions.php" class="footer-bottom-link" role="listitem">Terms</a>
+        <a href="cookie-policy.php" class="footer-bottom-link" role="listitem">Cookies</a>
       </div>
       <!-- Payment icons row (text fallback) -->
       <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
@@ -108,3 +108,4 @@
 
   </div>
 </footer>
+

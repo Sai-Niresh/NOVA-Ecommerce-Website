@@ -324,7 +324,7 @@
       if (loadMoreBtn) {
         if (sorted.length > state.displayedCount) {
           loadMoreBtn.style.display = 'inline-flex';
-          loadMoreBtn.textContent = `Load More (${sorted.length - state.displayedCount} left)`;
+          loadMoreBtn.textContent = `${sorted.length - state.displayedCount} LEFT`;
         } else {
           loadMoreBtn.style.display = 'none';
         }

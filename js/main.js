@@ -32,43 +32,141 @@ const headerPanel = document.getElementById('header-panel');
 const headerPanelTitle = document.getElementById('header-panel-title');
 const headerPanelLead = document.querySelector('.header-panel-lead');
 const headerPanelContent = document.getElementById('header-panel-content');
-const headerSearchInput = document.getElementById('header-search-input');
-const headerSearchForm = document.getElementById('header-search-form');
 const headerPanelClose = document.getElementById('header-panel-close');
-const searchDiscovery = document.getElementById('search-discovery');
+const headerSearchBarOverlay = document.getElementById('header-search-bar-overlay');
+const headerSearchBarInput = document.getElementById('header-search-bar-input');
+const headerSearchBarForm = document.getElementById('header-search-bar-form');
+const headerSearchBarClose = document.getElementById('header-search-bar-close');
 let accountMode = 'signin';
+
+function openHeaderSearchBar() {
+  if (!headerSearchBarOverlay) return;
+  closeHeaderPanel();
+  headerSearchBarOverlay.classList.add('is-visible');
+  headerSearchBarOverlay.setAttribute('aria-hidden', 'false');
+  document.getElementById('search-btn')?.classList.add('is-active');
+  setTimeout(() => {
+    headerSearchBarInput?.focus();
+  }, 50);
+}
+
+function closeHeaderSearchBar() {
+  if (!headerSearchBarOverlay) return;
+  headerSearchBarOverlay.classList.remove('is-visible');
+  headerSearchBarOverlay.setAttribute('aria-hidden', 'true');
+  document.getElementById('search-btn')?.classList.remove('is-active');
+}
 
 function openHeaderPanel(mode) {
   if (!headerPanel) return;
-  document.querySelectorAll('#search-btn, #nav-wishlist-btn, #cart-btn').forEach((button) => {
-    button.classList.toggle('is-active', button.id === (mode === 'search' ? 'search-btn' : mode === 'wishlist' ? 'nav-wishlist-btn' : 'cart-btn'));
+  closeHeaderSearchBar();
+  document.querySelectorAll('#nav-wishlist-btn, #cart-btn').forEach((button) => {
+    button.classList.toggle('is-active', button.id === (mode === 'wishlist' ? 'nav-wishlist-btn' : 'cart-btn'));
   });
-  headerPanelTitle.textContent = mode === 'search' ? 'Search NOVA' : (mode === 'wishlist' ? 'Your Wishlist' : 'Your Cart');
+  headerPanelTitle.textContent = mode === 'wishlist' ? 'Your Wishlist' : 'Your Cart';
   if (headerPanelLead) {
-    headerPanelLead.textContent = mode === 'search'
-      ? 'Search the collection by product, category, or style.'
-      : (mode === 'wishlist' ? 'A considered edit of the pieces you want to keep close.' : 'Review your selected pieces before checkout.');
+    headerPanelLead.textContent = mode === 'wishlist'
+      ? 'A considered edit of the pieces you want to keep close.'
+      : 'Review your selected pieces before checkout.';
   }
-  headerSearchForm.hidden = mode !== 'search';
-  searchDiscovery.hidden = mode !== 'search';
-  if (mode === 'search') {
-    headerPanelContent.innerHTML = '<div class="panel-intro"><span class="panel-index">01</span><p>Find your next NOVA essential.</p></div>';
-    headerSearchInput?.focus();
-  } else if (mode === 'wishlist') {
-    const saved = document.querySelectorAll('.product-wishlist-btn.is-active').length;
-    headerPanelContent.innerHTML = saved
-      ? `<div class="panel-state panel-state--saved"><span class="panel-state-icon">♥</span><strong>${saved} saved item${saved === 1 ? '' : 's'}</strong><p>Your selected pieces are waiting for you.</p></div>`
-      : '<div class="panel-state"><span class="panel-state-icon">♡</span><strong>Your wishlist is empty</strong><p>Tap the heart on a product to save it here.</p></div>';
+  if (mode === 'wishlist') {
+    renderWishlistPanel();
   } else {
     const items = getCartItems();
     const count = items.reduce((total, item) => total + item.quantity, 0);
     headerPanelContent.innerHTML = count
-      ? `<div class="cart-panel-list">${items.map((item) => `<div class="cart-panel-item"><div><strong>${item.name}</strong><span>Qty ${item.quantity}</span></div><b>₹${Number(item.price).toLocaleString('en-IN')}</b></div>`).join('')}</div><div class="cart-panel-footer"><strong>${count} item${count === 1 ? '' : 's'} in your cart</strong><a class="btn btn-primary panel-action" href="cart.php">View cart</a></div>`
+      ? `<div class="cart-panel-list">${items.map((item) => `<div class="cart-panel-item"><div class="cart-panel-item-top"><strong>${item.name}</strong><span class="cart-panel-item-qty">Qty ${item.quantity}</span></div><b>₹${Number(item.price).toLocaleString('en-IN')}</b></div>`).join('')}</div><div class="cart-panel-footer"><strong>${count} item${count === 1 ? '' : 's'} in your cart</strong><a class="btn btn-primary panel-action" href="cart.php">View cart</a></div>`
       : '<div class="panel-state"><span class="panel-state-icon">▢</span><strong>Your cart is empty</strong><p>Add something exceptional to get started.</p><a class="btn btn-primary panel-action" href="shop.php">Explore the shop</a></div>';
   }
   headerPanel.classList.add('is-visible');
   headerPanel.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+}
+
+function renderWishlistPanel() {
+  if (!headerPanelContent) return;
+  const savedIds = Array.from(Nova.wishlist);
+  if (!savedIds.length) {
+    headerPanelContent.innerHTML =
+      '<div class="panel-state panel-state--empty"><span class="panel-state-icon">♡</span><strong>Your wishlist is empty</strong><p>Tap the heart on a product to save it here.</p></div>';
+    return;
+  }
+
+  let html = '<div class="wishlist-panel-list">';
+  savedIds.forEach(id => {
+    const heartBtn = document.querySelector(`.product-wishlist-btn[data-id="${id}"]`);
+    const card = heartBtn?.closest('.product-card');
+    if (!card) return;
+    const name = card.querySelector('.product-name')?.textContent?.trim() || 'Product';
+    const priceText = card.querySelector('.product-price-current')?.textContent?.trim() || '';
+    const image = card.querySelector('.product-img-primary')?.src || '';
+    const productUrl = card.querySelector('.product-name a')?.getAttribute('href') || `product.php?id=${id}`;
+
+    html += `
+      <div class="wishlist-panel-item">
+        <a href="${productUrl}" class="wishlist-panel-item-link" data-wishlist-product-id="${id}">
+          <div class="wishlist-panel-item-img">
+            <img src="${image}" alt="${name}" loading="lazy">
+          </div>
+          <div class="wishlist-panel-item-details">
+            <p class="product-category-label--detail">WISHLIST</p>
+            <h3 class="wishlist-panel-item-name">${name}</h3>
+            <p class="wishlist-panel-item-price">${priceText}</p>
+          </div>
+        </a>
+        <div class="wishlist-panel-item-actions">
+          <button class="btn btn-outline wishlist-panel-remove" data-wishlist-remove-id="${id}" type="button">Remove</button>
+          <button class="btn btn-primary wishlist-panel-cart" data-wishlist-cart-id="${id}" type="button">Add to Cart</button>
+        </div>
+      </div>`;
+  });
+  html += '</div>';
+  headerPanelContent.innerHTML = html;
+
+  // Wire up remove buttons
+  headerPanelContent.querySelectorAll('[data-wishlist-remove-id]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const removeId = btn.dataset.wishlistRemoveId;
+      const heartBtn = document.querySelector(`.product-wishlist-btn[data-id="${removeId}"]`);
+      if (heartBtn) {
+        heartBtn.classList.remove('is-active');
+        const icon = heartBtn.querySelector('svg');
+        if (icon) {
+          icon.style.fill = '';
+          icon.classList.remove('wishlist-activated');
+        }
+      }
+      Nova.wishlist.delete(String(removeId));
+      renderWishlistPanel();
+    });
+  });
+
+  // Wire up Add to Cart buttons
+  headerPanelContent.querySelectorAll('[data-wishlist-cart-id]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const cartId = btn.dataset.wishlistCartId;
+      const heartBtn = document.querySelector(`.product-wishlist-btn[data-id="${cartId}"]`);
+      const card = heartBtn?.closest('.product-card');
+      if (card && window.NovaApp?.addCartItem) {
+        const name = card.querySelector('.product-name')?.textContent?.trim() || 'Item';
+        const price = parseFloat(card?.dataset?.price || 0);
+        const image = card.querySelector('.product-img-primary')?.src || '';
+        window.NovaApp.addCartItem({ id: cartId, name, price, image }, 1);
+        showCartFeedback(name);
+        const original = btn.textContent;
+        btn.textContent = '✓ Added';
+        btn.style.background = '#16a34a';
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.style.background = '';
+        }, 1400);
+      }
+    });
+  });
 }
 
 function getCartItems() {
@@ -102,17 +200,32 @@ function closeHeaderPanel() {
   document.body.style.overflow = '';
 }
 
-document.getElementById('search-btn')?.addEventListener('click', () => openHeaderPanel('search'));
+document.getElementById('search-btn')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (headerSearchBarOverlay?.classList.contains('is-visible')) {
+    closeHeaderSearchBar();
+  } else {
+    openHeaderSearchBar();
+  }
+});
 document.getElementById('nav-wishlist-btn')?.addEventListener('click', () => openHeaderPanel('wishlist'));
 document.getElementById('cart-btn')?.addEventListener('click', () => openHeaderPanel('cart'));
 headerPanelClose?.addEventListener('click', closeHeaderPanel);
+headerSearchBarClose?.addEventListener('click', closeHeaderSearchBar);
 headerPanel?.addEventListener('click', (event) => {
   if (event.target === headerPanel) closeHeaderPanel();
 });
-headerSearchForm?.addEventListener('submit', (event) => {
+headerSearchBarForm?.addEventListener('submit', (event) => {
   event.preventDefault();
-  const query = headerSearchInput?.value.trim();
+  const query = headerSearchBarInput?.value.trim();
   if (query) window.location.href = `shop.php?search=${encodeURIComponent(query)}`;
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeHeaderSearchBar();
+    closeHeaderPanel();
+  }
 });
 
 document.querySelectorAll('.account-password-toggle').forEach((button) => {
@@ -130,10 +243,13 @@ function setAccountMode(mode = 'signin') {
   accountMode = mode;
   const isSignup = accountMode === 'signup';
   const isReset = accountMode === 'reset';
+  document.querySelectorAll('.account-tab-btn').forEach((tab) => {
+    tab.classList.toggle('is-active', (tab.dataset.tabMode || 'signin') === accountMode);
+  });
   accountTitle.textContent = isSignup ? 'Create your account' : (isReset ? 'Reset your password' : 'Welcome back');
   accountCopy.textContent = isSignup
     ? 'Create your NOVA account to save your wishlist and shop faster.'
-    : (isReset ? 'Enter your email and choose a new password for your NOVA account.' : 'Sign in to save your wishlist and keep your NOVA shopping experience together.');
+    : (isReset ? 'Confirm your current password and choose a new one for your NOVA account.' : 'Sign in to save your wishlist and keep your NOVA shopping experience together.');
   accountSubmit.textContent = isSignup ? 'Create Account' : (isReset ? 'Reset Password' : 'Sign In');
   accountToggle.textContent = isSignup ? 'Already have an account? Sign In' : (isReset ? 'Back to Sign In' : 'Create an account');
   accountForm.querySelectorAll('.account-signup-only').forEach((field) => {
@@ -168,7 +284,53 @@ function closeAccountModal() {
 document.querySelectorAll('.js-account-open').forEach(button => {
   button.addEventListener('click', () => openAccountModal(button.dataset.accountMode || 'signin'));
 });
+
+/* ─── USER DROPDOWN MENU (signed-in state) ────────────────── */
+const userMenuTrigger = document.getElementById('user-menu-trigger');
+const userDropdownMenu = document.getElementById('user-dropdown-menu');
+
+function closeUserDropdown() {
+  userDropdownMenu?.classList.remove('is-open');
+  userDropdownMenu?.setAttribute('aria-hidden', 'true');
+  userMenuTrigger?.setAttribute('aria-expanded', 'false');
+}
+
+userMenuTrigger?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  const isOpen = userDropdownMenu?.classList.toggle('is-open');
+  userDropdownMenu?.setAttribute('aria-hidden', String(!isOpen));
+  userMenuTrigger.setAttribute('aria-expanded', String(!!isOpen));
+});
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('#user-menu-wrap')) closeUserDropdown();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeUserDropdown();
+});
+
+/* ─── SIGN OUT ────────────────────────────────────────────── */
+document.querySelectorAll('.js-account-logout').forEach(button => {
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    try {
+      await fetch('auth.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'logout' }),
+      });
+    } catch (error) {
+      // Even if the request fails, reload to the signed-out header
+    }
+    window.location.href = 'index.php';
+  });
+});
+
 accountClose?.addEventListener('click', closeAccountModal);
+document.querySelectorAll('.account-tab-btn').forEach((tab) => {
+  tab.addEventListener('click', () => setAccountMode(tab.dataset.tabMode || 'signin'));
+});
 accountToggle?.addEventListener('click', () => {
   setAccountMode(accountMode === 'signup' || accountMode === 'reset' ? 'signin' : 'signup');
 });
@@ -200,6 +362,13 @@ accountForm?.addEventListener('submit', async (event) => {
     accountMsg.textContent = 'New password must be at least 6 characters.';
     accountMsg.className = 'account-form-message is-error';
     resetPassword?.focus();
+    return;
+  }
+
+  if (accountMode === 'reset' && !password?.value) {
+    accountMsg.textContent = 'Enter your current password to reset it.';
+    accountMsg.className = 'account-form-message is-error';
+    password?.focus();
     return;
   }
 
@@ -261,7 +430,18 @@ accountForm?.addEventListener('submit', async (event) => {
     accountMsg.textContent = result.message;
     accountMsg.className = 'account-form-message is-success';
     accountForm.reset();
-    accountModal?.setAttribute('data-user-name', result.user?.name || '');
+
+    if (accountMode === 'signup') {
+      // Show success briefly, then reload so the header reflects the new session
+      setTimeout(() => {
+        window.location.reload();
+      }, 900);
+    } else if (accountMode === 'login') {
+      // Reload so the server-rendered header shows the signed-in state
+      setTimeout(() => {
+        window.location.reload();
+      }, 400);
+    }
   } catch (error) {
     accountMsg.textContent = error.message || 'Unable to connect to the authentication service.';
     accountMsg.className = 'account-form-message is-error';
@@ -296,6 +476,19 @@ function onScroll() {
 
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll(); // run on load
+
+/* ─── LOADER FAILSAFE ────────────────────────────────────── */
+/* Independent of GSAP: if the entrance timeline never completes
+   (CDN hang/error), force-dismiss the loader after 4s so content
+   is never trapped behind the overlay. */
+setTimeout(() => {
+  const loader = document.getElementById('page-loader');
+  if (loader && !loader.classList.contains('is-complete')) {
+    loader.classList.add('is-complete');
+    loader.style.opacity = '0';
+    loader.style.pointerEvents = 'none';
+  }
+}, 4000);
 
 /* ─── MOBILE DRAWER ──────────────────────────────────────── */
 function openDrawer() {

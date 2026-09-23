@@ -4,6 +4,7 @@
  * Homepage: Hero → Categories → Featured → Promo → New Arrivals → Brand Story → Newsletter
  */
 require_once 'config/constants.php';
+require_once 'includes/products-data.php';
 
 // ── Helper: star rating HTML ──────────────────────────────
 function starRating(float $rating, int $count): string {
@@ -24,10 +25,11 @@ function starRating(float $rating, int $count): string {
 // ── Helper: product card HTML ─────────────────────────────
 function productCard(array $p): string {
   $sym     = NOVA_CURRENCY_SYMBOL;
-  $hasDisc = isset($p['original_price']);
+  $hasDisc = isset($p['original_price']) && $p['original_price'] > $p['price'];
   $disc    = $hasDisc ? round((($p['original_price'] - $p['price']) / $p['original_price']) * 100) : 0;
+  $id      = (int)($p['id'] ?? 1);
 
-  $html  = '<article class="product-card" aria-label="' . htmlspecialchars($p['name']) . '">';
+  $html  = '<article class="product-card" data-product-id="' . $id . '" data-price="' . $p['price'] . '" data-category="' . htmlspecialchars($p['category']) . '" data-rating="' . $p['rating'] . '" aria-label="' . htmlspecialchars($p['name']) . '">';
   $html .= '  <div class="product-image-wrapper">';
 
   // Badge
@@ -38,10 +40,10 @@ function productCard(array $p): string {
   }
 
   // Image
-  $html .= '    <img class="product-img" src="' . $p['image'] . '" alt="' . htmlspecialchars($p['name']) . '" loading="lazy" width="400" height="500">';
+  $html .= '    <img class="product-img product-img-primary" src="' . htmlspecialchars($p['image']) . '" alt="' . htmlspecialchars($p['name']) . '" loading="lazy" width="400" height="500">';
 
   // Wishlist
-  $html .= '    <button class="product-wishlist-btn" aria-label="Add ' . htmlspecialchars($p['name']) . ' to wishlist">';
+  $html .= '    <button class="product-wishlist-btn" data-id="' . $id . '" aria-label="Add ' . htmlspecialchars($p['name']) . ' to wishlist">';
   $html .= '      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>';
   $html .= '    </button>';
   $html .= '  </div>';
@@ -49,7 +51,7 @@ function productCard(array $p): string {
   // Info
   $html .= '  <div class="product-info">';
   $html .= '    <span class="product-category-label">' . htmlspecialchars($p['category']) . '</span>';
-  $html .= '    <h3 class="product-name">' . htmlspecialchars($p['name']) . '</h3>';
+  $html .= '    <h3 class="product-name"><a href="product.php?id=' . $id . '">' . htmlspecialchars($p['name']) . '</a></h3>';
   $html .= starRating($p['rating'], $p['reviews']);
   $html .= '    <div class="product-price-row">';
   $html .= '      <span class="product-price-current">' . $sym . number_format($p['price']) . '</span>';
@@ -58,91 +60,16 @@ function productCard(array $p): string {
     $html .= '      <span class="product-discount">' . $disc . '% off</span>';
   }
   $html .= '    </div>';
-  $html .= '    <button class="product-add-btn" aria-label="Add ' . htmlspecialchars($p['name']) . ' to cart">Add to Cart</button>';
+  $html .= '    <button class="product-add-btn" data-id="' . $id . '" aria-label="Add ' . htmlspecialchars($p['name']) . ' to cart">Add to Cart</button>';
   $html .= '  </div>';
   $html .= '</article>';
   return $html;
 }
 
-// ── Product Data ──────────────────────────────────────────
-$featured = [
-  [
-    'name'           => 'Essential Oversized Tee',
-    'category'       => 'Men',
-    'price'          => 1299,
-    'original_price' => 1999,
-    'rating'         => 4.5,
-    'reviews'        => 284,
-    'image'          => 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80',
-  ],
-  [
-    'name'           => 'Aero Runner Sneakers',
-    'category'       => 'Shoes',
-    'price'          => 4999,
-    'original_price' => 6999,
-    'rating'         => 5,
-    'reviews'        => 512,
-    'image'          => 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80',
-  ],
-  [
-    'name'           => 'Minimal Chronograph Watch',
-    'category'       => 'Watches',
-    'price'          => 8499,
-    'original_price' => 11999,
-    'rating'         => 4.5,
-    'reviews'        => 178,
-    'image'          => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80',
-  ],
-  [
-    'name'           => 'Leather Crossbody Bag',
-    'category'       => 'Bags',
-    'price'          => 3799,
-    'original_price' => 4999,
-    'rating'         => 4,
-    'reviews'        => 96,
-    'image'          => 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80',
-  ],
-];
-
-$newArrivals = [
-  [
-    'name'     => 'Structured Blazer',
-    'category' => 'Men',
-    'price'    => 5499,
-    'badge'    => 'New',
-    'rating'   => 4.5,
-    'reviews'  => 43,
-    'image'    => 'https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=600&q=80',
-  ],
-  [
-    'name'     => 'Fluid Wrap Dress',
-    'category' => 'Women',
-    'price'    => 2999,
-    'badge'    => 'New',
-    'rating'   => 5,
-    'reviews'  => 67,
-    'image'    => 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=600&q=80',
-  ],
-  [
-    'name'     => 'Suede Loafers',
-    'category' => 'Shoes',
-    'price'    => 3299,
-    'badge'    => 'New',
-    'rating'   => 4,
-    'reviews'  => 29,
-    'image'    => 'https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&w=600&q=80',
-  ],
-  [
-    'name'           => 'Titanium Aviator Sunglasses',
-    'category'       => 'Accessories',
-    'price'          => 1899,
-    'original_price' => 2499,
-    'badge'          => 'New',
-    'rating'         => 4.5,
-    'reviews'        => 112,
-    'image'          => 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80',
-  ],
-];
+// ── Dynamic Products Data from Database ────────────────────
+$allProducts = getAllProducts();
+$featured = getFeaturedProducts(4);
+$newArrivals = getNewArrivals(4);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -186,12 +113,14 @@ $newArrivals = [
   <!-- NOVA Stylesheets -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
   <!-- GSAP (before body close) -->
   <!-- Loaded at bottom for performance -->
 </head>
 
-<body class="no-js">
+<body class="no-js header-transparent">
 <script>document.body.classList.remove('no-js');</script>
 
 <?php include 'includes/header.php'; ?>
@@ -593,9 +522,13 @@ $newArrivals = [
 <!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
-<!-- GSAP -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<!-- GSAP (deferred; same version as all other pages) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+  window.NOVA_PRODUCTS_DATA = <?= json_encode($allProducts, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+</script>
 
 <!-- NOVA Scripts -->
 <script src="js/main.js"        defer></script>

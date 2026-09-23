@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin.php
+Disallow: /auth.php
+Disallow: /orders.php
+Disallow: /config/
+Disallow: /includes/
+
+Sitemap:

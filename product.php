@@ -137,6 +137,8 @@ $discountValue = $hasDiscount ? (int) ($product['discount'] ?? round((($product[
   <meta name="description" content="Premium product details for <?= htmlspecialchars($product['name'] ?? 'NOVA product') ?>.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body>
@@ -219,13 +221,34 @@ $discountValue = $hasDiscount ? (int) ($product['discount'] ?? round((($product[
             <p class="product-description"><?= htmlspecialchars($product['description']) ?></p>
             <button type="button" class="text-link btn-read-more" aria-expanded="false">Read More</button>
 
+            <?php
+              // Normalize colors so a stored plain-string list (e.g. ["black"])
+              // can never break the swatch renderer with a fatal error.
+              $productColors = [];
+              foreach (($product['colors'] ?? []) as $cItem) {
+                if (is_array($cItem)) {
+                  $cName = trim((string) ($cItem['name'] ?? ($cItem['hex'] ?? '')));
+                  $cHex  = trim((string) ($cItem['hex'] ?? ''));
+                } else {
+                  $cName = trim((string) $cItem);
+                  $cHex  = '';
+                }
+                if ($cName === '' && $cHex === '') continue;
+                if ($cHex === '' && preg_match('/^#?[0-9a-fA-F]{3}$|^#?[0-9a-fA-F]{6}$/', $cName)) {
+                  $cHex = strpos($cName, '#') === 0 ? $cName : '#' . $cName;
+                }
+                if ($cHex === '') $cHex = function_exists('nova_color_name_to_hex') ? nova_color_name_to_hex($cName) : '#cccccc';
+                if ($cName === '') $cName = $cHex;
+                $productColors[] = ['name' => $cName, 'hex' => $cHex];
+              }
+            ?>
             <div class="product-option-group">
               <div class="option-header-row">
                 <span class="option-heading">Color</span>
-                <span class="option-selected-value" id="selected-color-name"><?= htmlspecialchars($product['colors'][0]['name'] ?? 'Black') ?></span>
+                <span class="option-selected-value" id="selected-color-name"><?= htmlspecialchars($productColors[0]['name'] ?? 'Black') ?></span>
               </div>
               <div class="color-options" aria-label="Choose a color">
-                <?php foreach ($product['colors'] ?? [] as $color): ?>
+                <?php foreach ($productColors as $color): ?>
                   <button type="button" class="color-option <?= (!isset($firstColor) ? 'is-selected' : '') ?>" data-color-name="<?= htmlspecialchars($color['name']) ?>" style="background: <?= htmlspecialchars($color['hex']) ?>" aria-label="Select <?= htmlspecialchars($color['name']) ?> color" title="<?= htmlspecialchars($color['name']) ?>">
                     <span class="sr-only"><?= htmlspecialchars($color['name']) ?></span>
                   </button>
@@ -503,5 +526,6 @@ $discountValue = $hasDiscount ? (int) ($product['discount'] ?? round((($product[
 </script>
 <script src="js/main.js" defer></script>
 <script src="js/product.js" defer></script>
+<script src="js/interactions.js" defer></script>
 </body>
 </html>

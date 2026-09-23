@@ -282,6 +282,15 @@
 }
 
 /* ─── 12. PARALLAX WRAPPER ───────────────────────────────── */
+.no-gsap .sr-item {
+  opacity: 1;
+  transform: none;
+}
+
+.no-gsap .page-loader {
+  display: none;
+}
+
 .parallax-img-wrapper {
   overflow: hidden;
   will-change: transform;

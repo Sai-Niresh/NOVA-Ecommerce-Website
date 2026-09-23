@@ -63,7 +63,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 20,
       'rating'         => 4.9,
       'reviews'        => 96,
-      'image'          => 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Beige', 'hex' => '#d4c5b9'],
@@ -85,8 +85,8 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 22,
       'rating'         => 4.6,
       'reviews'        => 210,
-      'image'          => 'https://images.unsplash.com/photo-1542272604-780c36856d64?auto=format&fit=crop&w=800&q=80',
-      'secondary_image'=> 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80',
+      'secondary_image'=> 'https://images.unsplash.com/photo-1542272604-780c36856542?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Indigo', 'hex' => '#1a2a3a'],
         ['name' => 'Washed Black', 'hex' => '#2b2b2b'],
@@ -107,7 +107,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 25,
       'rating'         => 4.7,
       'reviews'        => 318,
-      'image'          => 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Black', 'hex' => '#0a0a0a'],
@@ -178,7 +178,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 20,
       'rating'         => 4.6,
       'reviews'        => 142,
-      'image'          => 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1601925260368-9a770e320c7c?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Black', 'hex' => '#0a0a0a'],
@@ -360,7 +360,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 29,
       'rating'         => 4.7,
       'reviews'        => 178,
-      'image'          => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Matte Black', 'hex' => '#181818'],
@@ -404,8 +404,8 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 21,
       'rating'         => 4.6,
       'reviews'        => 145,
-      'image'          => 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
-      'secondary_image'=> 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=800&q=80',
+      'secondary_image'=> 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Saddle Brown', 'hex' => '#8b4513'],
         ['name' => 'Dark Cognac', 'hex' => '#5c2c16'],
@@ -448,7 +448,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 23,
       'rating'         => 4.9,
       'reviews'        => 76,
-      'image'          => 'https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Champagne Gold', 'hex' => '#c8a96e'],
@@ -473,7 +473,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'rating'         => 4.6,
       'reviews'        => 215,
       'image'          => 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
-      'secondary_image'=> 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
+      'secondary_image'=> 'https://images.unsplash.com/photo-1544816155-12387ec4a497?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Chestnut Brown', 'hex' => '#7b3f00'],
         ['name' => 'Jet Black', 'hex' => '#0a0a0a'],
@@ -494,7 +494,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 28,
       'rating'         => 4.7,
       'reviews'        => 188,
-      'image'          => 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1544816155-12387ec4a497?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Ecru / Tan', 'hex' => '#f5f0eb'],
@@ -539,7 +539,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'rating'         => 4.5,
       'reviews'        => 94,
       'image'          => 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80',
-      'secondary_image'=> 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80',
+      'secondary_image'=> 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Beige Nude', 'hex' => '#e3d5ca'],
         ['name' => 'Black', 'hex' => '#0a0a0a'],
@@ -561,8 +561,8 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 23,
       'rating'         => 4.8,
       'reviews'        => 78,
-      'image'          => 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80',
-      'secondary_image'=> 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1585123334904-845d60c6a760?auto=format&fit=crop&w=800&q=80',
+      'secondary_image'=> 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Dark Cognac', 'hex' => '#5c2c16'],
         ['name' => 'Midnight Navy', 'hex' => '#0f172a'],
@@ -630,8 +630,8 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'discount'       => 24,
       'rating'         => 4.6,
       'reviews'        => 210,
-      'image'          => 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80',
-      'secondary_image'=> 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80',
+      'image'          => 'https://images.unsplash.com/photo-1554188248-986adbb73ad1?auto=format&fit=crop&w=800&q=80',
+      'secondary_image'=> 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Black / Tan Reversible', 'hex' => '#0a0a0a'],
       ],
@@ -674,7 +674,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'rating'         => 4.7,
       'reviews'        => 310,
       'image'          => 'https://images.unsplash.com/photo-1606503153255-59d8b8b82176?auto=format&fit=crop&w=800&q=80',
-      'secondary_image'=> 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+      'secondary_image'=> 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
         ['name' => 'Matte Black', 'hex' => '#0a0a0a'],
         ['name' => 'Saddle Tan', 'hex' => '#a0522d'],
@@ -692,6 +692,73 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
   /**
    * Helper Functions
    */
+
+  /**
+   * Canonicalizes any stored/posted colors payload into the [{ name, hex }]
+   * shape that every card, swatch and quick-view renderer expects.
+   *
+   * Accepts objects ([{"name":"Black","hex":"#0a0a0a"}]), bare hex strings
+   * (["#ffffff"]), plain names (["black"]), comma lists ("Black, White")
+   * or a raw JSON string. Never returns strings, so renderers can safely
+   * read $color['hex'] / $color['name'].
+   */
+  function nova_normalize_colors($raw): array {
+    if (is_string($raw)) {
+      $raw = trim($raw);
+      if ($raw === '') return [];
+      $decoded = json_decode($raw, true);
+      $raw = is_array($decoded)
+        ? $decoded
+        : array_filter(array_map('trim', explode(',', $raw)), fn($v) => $v !== '');
+    }
+    if (!is_array($raw)) return [];
+
+    $normalized = [];
+    foreach ($raw as $item) {
+      if (is_array($item)) {
+        $name = trim((string) ($item['name'] ?? ($item['label'] ?? ($item['hex'] ?? ''))));
+        $hex  = trim((string) ($item['hex'] ?? ($item['value'] ?? '')));
+      } else {
+        $name = trim((string) $item);
+        $hex  = '';
+      }
+      if ($name === '' && $hex === '') continue;
+
+      // A bare "#fff" / "ffffff" entry is its own color name.
+      if ($hex === '' && preg_match('/^#?[0-9a-fA-F]{3}$|^#?[0-9a-fA-F]{6}$/', $name)) {
+        $hex = strpos($name, '#') === 0 ? $name : '#' . $name;
+      }
+      if ($hex === '') $hex = nova_color_name_to_hex($name);
+      if ($name === '') $name = $hex;
+
+      $normalized[] = ['name' => $name, 'hex' => $hex];
+    }
+    return $normalized;
+  }
+
+  /**
+   * Resolves a human color name to a concrete hex value.
+   * Unknown names get a stable color derived from the name, so a swatch
+   * is always renderable instead of throwing a fatal error.
+   */
+  function nova_color_name_to_hex(string $name): string {
+    static $known = [
+      'black' => '#0a0a0a', 'white' => '#ffffff', 'off-white' => '#f4f1ea', 'grey' => '#999999',
+      'gray' => '#999999', 'silver' => '#c0c0c0', 'charcoal' => '#333333', 'red' => '#dc2626',
+      'maroon' => '#800000', 'blue' => '#1e3a8a', 'navy' => '#1b263b', 'sky blue' => '#87ceeb',
+      'green' => '#228b22', 'olive' => '#556b2f', 'forest green' => '#228b22', 'yellow' => '#ffd700',
+      'gold' => '#c8a96e', 'orange' => '#ea580c', 'brown' => '#7b3f00', 'tan' => '#a0522d',
+      'beige' => '#d4c5b9', 'cream' => '#f5f2eb', 'pink' => '#e8c5c8', 'purple' => '#6b21a8',
+      'violet' => '#6d28d9', 'indigo' => '#1a2a3a', 'camel' => '#c19a6b', 'cognac' => '#5c2c16',
+      'teal' => '#0f5257', 'khaki' => '#c3b091',
+    ];
+    $key = strtolower(trim($name));
+    if (isset($known[$key])) return $known[$key];
+
+    static $palette = ['#0a0a0a', '#444444', '#8b4513', '#1e3a8a', '#228b22', '#0f5257', '#b76e79', '#c8a96e', '#6b21a8', '#dc2626'];
+    return $palette[abs(crc32($key)) % count($palette)];
+  }
+
   function getDatabaseProducts(): ?array {
     global $NOVA_PRODUCTS;
     static $loaded = false;
@@ -709,13 +776,13 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
           $insert->execute([
             $product['id'], $product['name'], $product['category'], $product['price'], $product['original_price'] ?? null,
             $product['discount'] ?? null, $product['rating'] ?? 0, $product['reviews'] ?? 0, $product['image'],
-            $product['secondary_image'] ?? null, json_encode($product['colors'] ?? []), json_encode($product['sizes'] ?? []),
+            $product['secondary_image'] ?? null, json_encode(nova_normalize_colors($product['colors'] ?? [])), json_encode($product['sizes'] ?? []),
             $product['stock'] ?? 0, $product['description'] ?? null, $product['badge'] ?? null, $product['created_at'] ?? null,
             !empty($product['featured']) ? 1 : 0,
           ]);
         }
       }
-      $rows = $db->query('SELECT id, name, category, price, original_price, discount, rating, reviews, image, secondary_image, colors_json, sizes_json, stock, description, badge, created_at, featured FROM products ORDER BY id')->fetchAll();
+      $rows = $db->query('SELECT id, name, category, price, original_price, discount, rating, reviews, image, secondary_image, colors_json, sizes_json, stock, description, badge, created_at, featured FROM products ORDER BY id ASC')->fetchAll();
       $databaseProducts = array_map(function (array $row): array {
         $row['id'] = (int) $row['id'];
         $row['price'] = (float) $row['price'];
@@ -725,7 +792,7 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
         $row['reviews'] = (int) $row['reviews'];
         $row['stock'] = (int) $row['stock'];
         $row['featured'] = (bool) $row['featured'];
-        $row['colors'] = json_decode($row['colors_json'] ?: '[]', true) ?: [];
+        $row['colors'] = nova_normalize_colors($row['colors_json'] ?? '');
         $row['sizes'] = json_decode($row['sizes_json'] ?: '[]', true) ?: [];
         unset($row['colors_json'], $row['sizes_json']);
         return $row;
@@ -738,12 +805,12 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
 
   function getAllProducts(): array {
     global $NOVA_PRODUCTS;
-    return getDatabaseProducts() ?? $NOVA_PRODUCTS;
+    $dbProducts = getDatabaseProducts();
+    return (!empty($dbProducts)) ? $dbProducts : $NOVA_PRODUCTS;
   }
 
   function getProductById(int $id): ?array {
-    global $NOVA_PRODUCTS;
-    foreach ($NOVA_PRODUCTS as $product) {
+    foreach (getAllProducts() as $product) {
       if ((int)$product['id'] === $id) {
         return $product;
       }
@@ -762,9 +829,45 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
   }
 
   function getFeaturedProducts(int $limit = 8): array {
-    $featured = array_values(array_filter(getAllProducts(), function($p) {
+    $all = getAllProducts();
+    $featured = array_values(array_filter($all, function($p) {
       return !empty($p['featured']);
     }));
+    if (empty($featured)) {
+      return array_slice($all, 0, $limit);
+    }
     return array_slice($featured, 0, $limit);
   }
+
+  function getNewArrivals(int $limit = 4): array {
+    $all = getAllProducts();
+    usort($all, function($a, $b) {
+      $tA = !empty($a['created_at']) ? strtotime($a['created_at']) : 0;
+      $tB = !empty($b['created_at']) ? strtotime($b['created_at']) : 0;
+      if ($tA === $tB) {
+        return ($b['id'] ?? 0) <=> ($a['id'] ?? 0);
+      }
+      return $tB <=> $tA;
+    });
+    return array_slice($all, 0, $limit);
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
