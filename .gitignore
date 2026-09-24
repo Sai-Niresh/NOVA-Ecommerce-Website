@@ -16,6 +16,9 @@ node_modules/
 # ── Logs ──
 *.log
 
+# Local Windows PHP session files
+/tmp/_sessions/
+
 # ── Local-only debug + maintenance scripts (contain hardcoded dev credentials) ──
 test_*.php
 check_*.php

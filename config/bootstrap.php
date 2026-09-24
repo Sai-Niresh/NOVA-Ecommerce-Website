@@ -14,6 +14,15 @@ if (!function_exists('nova_session_start')) {
     if (session_status() === PHP_SESSION_ACTIVE) {
       return;
     }
+    if (PHP_OS_FAMILY === 'Windows') {
+      $localSessionPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . '_sessions';
+      if (!is_dir($localSessionPath)) {
+        mkdir($localSessionPath, 0777, true);
+      }
+      if (is_dir($localSessionPath) && is_writable($localSessionPath)) {
+        session_save_path($localSessionPath);
+      }
+    }
     session_set_cookie_params([
       'lifetime' => 0,
       'path'     => '/',
