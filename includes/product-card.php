@@ -63,18 +63,7 @@ if (!function_exists('renderProductCard')) {
     $html .= '    <span class="product-category-label">' . htmlspecialchars($p['category']) . '</span>';
     $html .= '    <h3 class="product-name"><a href="product.php?id=' . (int) $p['id'] . '">' . htmlspecialchars($p['name']) . '</a></h3>';
 
-    // Star Rating
-    $html .= '    <div class="product-rating">';
-    $html .= '      <div class="stars" aria-hidden="true">';
-    for ($i = 1; $i <= 5; $i++) {
-      $filled = $i <= round($p['rating']);
-      $html .= '        <svg width="12" height="12" viewBox="0 0 24 24" fill="' . ($filled ? 'currentColor' : 'none') . '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
-      $html .= '          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>';
-      $html .= '        </svg>';
-    }
-    $html .= '      </div>';
-    $html .= '      <span class="rating-count" aria-label="' . number_format($p['rating'], 1) . ' out of 5 — ' . $p['reviews'] . ' reviews">(' . $p['reviews'] . ')</span>';
-    $html .= '    </div>';
+
 
     // Price Row
     $html .= '    <div class="product-price-row">';

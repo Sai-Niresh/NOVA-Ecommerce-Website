@@ -6,22 +6,6 @@
 require_once 'config/constants.php';
 require_once 'includes/products-data.php';
 
-// ── Helper: star rating HTML ──────────────────────────────
-function starRating(float $rating, int $count): string {
-  $html = '<div class="product-rating">';
-  $html .= '<div class="stars" aria-hidden="true">';
-  for ($i = 1; $i <= 5; $i++) {
-    $filled = $i <= round($rating);
-    $html .= '<svg width="12" height="12" viewBox="0 0 24 24" fill="' . ($filled ? 'currentColor' : 'none') . '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
-    $html .= '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>';
-    $html .= '</svg>';
-  }
-  $html .= '</div>';
-  $html .= '<span class="rating-count" aria-label="' . number_format($rating, 1) . ' out of 5 — ' . $count . ' reviews">(' . $count . ')</span>';
-  $html .= '</div>';
-  return $html;
-}
-
 // ── Helper: product card HTML ─────────────────────────────
 function productCard(array $p): string {
   $sym     = NOVA_CURRENCY_SYMBOL;
@@ -52,7 +36,7 @@ function productCard(array $p): string {
   $html .= '  <div class="product-info">';
   $html .= '    <span class="product-category-label">' . htmlspecialchars($p['category']) . '</span>';
   $html .= '    <h3 class="product-name"><a href="product.php?id=' . $id . '">' . htmlspecialchars($p['name']) . '</a></h3>';
-  $html .= starRating($p['rating'], $p['reviews']);
+
   $html .= '    <div class="product-price-row">';
   $html .= '      <span class="product-price-current">' . $sym . number_format($p['price']) . '</span>';
   if ($hasDisc) {
@@ -211,7 +195,7 @@ $newArrivals = getNewArrivals(4);
           ['name' => 'Shoes',      'image' => 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80', 'alt' => 'Shoes and sneakers collection'],
           ['name' => 'Watches',    'image' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80', 'alt' => 'Luxury watches collection'],
           ['name' => 'Bags',       'image' => 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=500&q=80', 'alt' => 'Bags and handbags collection'],
-          ['name' => 'Accessories','image' => 'https://images.unsplash.com/photo-1576053139778-7e32f2ae3cda?auto=format&fit=crop&w=500&q=80', 'alt' => 'Fashion accessories collection'],
+          ['name' => 'Accessories','image' => 'https://images.unsplash.com/photo-1567488972530-7d787624c07c?auto=format&fit=crop&w=500&q=80', 'alt' => 'Fashion accessories collection'],
         ];
         foreach ($categories as $cat): ?>
         <a href="category.php?c=<?= urlencode($cat['name']) ?>" class="category-card" aria-label="Shop <?= htmlspecialchars($cat['name']) ?>">
