@@ -195,7 +195,7 @@ $newArrivals = getNewArrivals(4);
           ['name' => 'Shoes',      'image' => 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80', 'alt' => 'Shoes and sneakers collection'],
           ['name' => 'Watches',    'image' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80', 'alt' => 'Luxury watches collection'],
           ['name' => 'Bags',       'image' => 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=500&q=80', 'alt' => 'Bags and handbags collection'],
-          ['name' => 'Accessories','image' => 'https://images.unsplash.com/photo-1567488972530-7d787624c07c?auto=format&fit=crop&w=500&q=80', 'alt' => 'Fashion accessories collection'],
+          ['name' => 'Accessories','image' => 'https://images.unsplash.com/photo-1623299592165-96d072ee4a0e?auto=format&fit=crop&w=500&q=80', 'alt' => 'Fashion accessories collection'],
         ];
         foreach ($categories as $cat): ?>
         <a href="category.php?c=<?= urlencode($cat['name']) ?>" class="category-card" aria-label="Shop <?= htmlspecialchars($cat['name']) ?>">
