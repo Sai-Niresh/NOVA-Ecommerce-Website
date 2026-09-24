@@ -171,13 +171,6 @@
         secImgHTML = `<img class="product-img product-img-secondary" src="${secImg}" alt="${p.name} alt view" loading="lazy" width="400" height="500">`;
       }
 
-      let starsHTML = '';
-      const roundedRating = Math.round(p.rating || 5);
-      for (let i = 1; i <= 5; i++) {
-        const fill = i <= roundedRating ? 'currentColor' : 'none';
-        starsHTML += `<svg width="12" height="12" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
-      }
-
       let colorDotsHTML = '';
       if (p.colors && p.colors.length) {
         colorDotsHTML = '<div class="product-color-preview">';
@@ -209,10 +202,6 @@
           <div class="product-info">
             <span class="product-category-label">${p.category}</span>
             <h3 class="product-name"><a href="product.php?id=${encodeURIComponent(p.id)}">${p.name}</a></h3>
-            <div class="product-rating">
-              <div class="stars" aria-hidden="true">${starsHTML}</div>
-              <span class="rating-count">(${p.reviews || 0})</span>
-            </div>
             <div class="product-price-row">
               <span class="product-price-current">${sym}${Number(p.price).toLocaleString()}</span>
               ${hasDisc ? `<span class="product-price-original">${sym}${Number(p.original_price).toLocaleString()}</span><span class="product-discount">${disc}% off</span>` : ''}

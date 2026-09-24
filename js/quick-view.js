@@ -178,7 +178,7 @@
     // Rating Stars
     const ratingContainer = document.getElementById('qv-rating-container');
     ratingContainer.innerHTML = '';
-    const roundedRating = Math.round(currentProduct.rating || 5);
+    const roundedRating = Math.round(Number(currentProduct.rating) || 0);
     let starsHTML = '<div class="stars" style="display:flex; gap:2px; color:var(--nova-accent);">';
     for (let i = 1; i <= 5; i++) {
       const fill = i <= roundedRating ? 'currentColor' : 'none';

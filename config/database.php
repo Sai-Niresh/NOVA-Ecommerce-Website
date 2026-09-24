@@ -144,6 +144,21 @@ function novaDb(): PDO {
     $pdo->exec("ALTER TABLE products MODIFY COLUMN id INT UNSIGNED AUTO_INCREMENT");
   }
 
+  $pdo->exec(
+    'CREATE TABLE IF NOT EXISTS product_reviews (' .
+    'id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,' .
+    'product_id INT UNSIGNED NOT NULL,' .
+    'user_id INT UNSIGNED NOT NULL,' .
+    'rating TINYINT NOT NULL,' .
+    'review_text TEXT NULL,' .
+    'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,' .
+    'UNIQUE KEY uq_product_reviews_product_user (product_id, user_id),' .
+    'INDEX idx_product_reviews_created (created_at),' .
+    'CONSTRAINT fk_product_reviews_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,' .
+    'CONSTRAINT fk_product_reviews_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE' .
+    ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+  );
+
   $paymentColumn = $pdo->query("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'orders' AND COLUMN_NAME = 'payment_method'")->fetchColumn();
   if (!$paymentColumn) {
     $pdo->exec("ALTER TABLE orders ADD payment_method VARCHAR(30) NOT NULL DEFAULT 'cod' AFTER postal_code");

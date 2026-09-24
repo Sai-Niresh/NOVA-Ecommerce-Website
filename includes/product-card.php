@@ -7,6 +7,24 @@
 require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/products-data.php';
 
+if (!function_exists('nova_product_review_average')) {
+  function nova_product_review_average(int $productId): float {
+    static $averages = [];
+    if ($productId <= 0) return 0.0;
+    if (!array_key_exists($productId, $averages)) {
+      try {
+        require_once __DIR__ . '/../config/database.php';
+        $query = novaDb()->prepare('SELECT COALESCE(AVG(rating), 0) FROM product_reviews WHERE product_id = ?');
+        $query->execute([$productId]);
+        $averages[$productId] = (float) $query->fetchColumn();
+      } catch (Throwable $error) {
+        $averages[$productId] = 0.0;
+      }
+    }
+    return $averages[$productId];
+  }
+}
+
 if (!function_exists('renderProductCard')) {
   /**
    * Renders product card HTML markup
@@ -24,7 +42,8 @@ if (!function_exists('renderProductCard')) {
       ? (function_exists('nova_product_image_url') ? nova_product_image_url($p['secondary_image']) : (string) $p['secondary_image'])
       : $img;
 
-    $html  = '<article class="product-card" data-product-id="' . $p['id'] . '" data-category="' . htmlspecialchars($p['category']) . '" data-price="' . $p['price'] . '" data-rating="' . $p['rating'] . '" aria-label="' . htmlspecialchars($p['name']) . '">';
+    $ratingAverage = nova_product_review_average((int) $p['id']);
+    $html  = '<article class="product-card" data-product-id="' . $p['id'] . '" data-category="' . htmlspecialchars($p['category']) . '" data-price="' . $p['price'] . '" data-rating="' . number_format($ratingAverage, 2, '.', '') . '" aria-label="' . htmlspecialchars($p['name']) . '">';
     $html .= '  <div class="product-image-wrapper">';
 
     // Badges

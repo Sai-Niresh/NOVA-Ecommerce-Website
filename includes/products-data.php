@@ -16,8 +16,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 1299,
       'original_price' => 1999,
       'discount'       => 35,
-      'rating'         => 4.5,
-      'reviews'        => 284,
       'image'          => 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -39,8 +37,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 7499,
       'original_price' => 9999,
       'discount'       => 25,
-      'rating'         => 4.8,
-      'reviews'        => 142,
       'image'          => 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -61,8 +57,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 11999,
       'original_price' => 14999,
       'discount'       => 20,
-      'rating'         => 4.9,
-      'reviews'        => 96,
       'image'          => 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -83,8 +77,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 3499,
       'original_price' => 4499,
       'discount'       => 22,
-      'rating'         => 4.6,
-      'reviews'        => 210,
       'image'          => 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1542272604-780c36856542?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -105,8 +97,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 2999,
       'original_price' => 3999,
       'discount'       => 25,
-      'rating'         => 4.7,
-      'reviews'        => 318,
       'image'          => 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -130,8 +120,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 5499,
       'original_price' => 7499,
       'discount'       => 27,
-      'rating'         => 4.9,
-      'reviews'        => 189,
       'image'          => 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -153,8 +141,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 6999,
       'original_price' => 8999,
       'discount'       => 22,
-      'rating'         => 4.8,
-      'reviews'        => 164,
       'image'          => 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -176,8 +162,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 3999,
       'original_price' => 4999,
       'discount'       => 20,
-      'rating'         => 4.6,
-      'reviews'        => 142,
       'image'          => 'https://images.unsplash.com/photo-1601925260368-9a770e320c7c?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -199,8 +183,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 2499,
       'original_price' => 3299,
       'discount'       => 24,
-      'rating'         => 4.5,
-      'reviews'        => 98,
       'image'          => 'https://images.unsplash.com/photo-1598554747436-c9293d6a588f?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -221,8 +203,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 12999,
       'original_price' => 16999,
       'discount'       => 23,
-      'rating'         => 4.9,
-      'reviews'        => 82,
       'image'          => 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1520591799316-6b30425429aa?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -245,8 +225,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 4999,
       'original_price' => 6999,
       'discount'       => 28,
-      'rating'         => 5.0,
-      'reviews'        => 512,
       'image'          => 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -268,8 +246,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 8999,
       'original_price' => 11999,
       'discount'       => 25,
-      'rating'         => 4.8,
-      'reviews'        => 195,
       'image'          => 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1638247025967-b4e38f787b76?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -290,8 +266,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 6499,
       'original_price' => 8499,
       'discount'       => 23,
-      'rating'         => 4.7,
-      'reviews'        => 134,
       'image'          => 'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -312,8 +286,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 4299,
       'original_price' => 5499,
       'discount'       => 21,
-      'rating'         => 4.6,
-      'reviews'        => 220,
       'image'          => 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -334,8 +306,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 7999,
       'original_price' => 9999,
       'discount'       => 20,
-      'rating'         => 4.9,
-      'reviews'        => 68,
       'image'          => 'https://images.unsplash.com/photo-1562183241-b937e95585b6?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -358,8 +328,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 8499,
       'original_price' => 11999,
       'discount'       => 29,
-      'rating'         => 4.7,
-      'reviews'        => 178,
       'image'          => 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -380,8 +348,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 14999,
       'original_price' => 18999,
       'discount'       => 21,
-      'rating'         => 4.9,
-      'reviews'        => 112,
       'image'          => 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -402,8 +368,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 6299,
       'original_price' => 7999,
       'discount'       => 21,
-      'rating'         => 4.6,
-      'reviews'        => 145,
       'image'          => 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -424,8 +388,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 12499,
       'original_price' => 15999,
       'discount'       => 22,
-      'rating'         => 4.8,
-      'reviews'        => 89,
       'image'          => 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1533139502658-0198f920d8e8?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -446,8 +408,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 9999,
       'original_price' => 12999,
       'discount'       => 23,
-      'rating'         => 4.9,
-      'reviews'        => 76,
       'image'          => 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -470,8 +430,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 3799,
       'original_price' => 4999,
       'discount'       => 24,
-      'rating'         => 4.6,
-      'reviews'        => 215,
       'image'          => 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1544816155-12387ec4a497?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -492,8 +450,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 2499,
       'original_price' => 3499,
       'discount'       => 28,
-      'rating'         => 4.7,
-      'reviews'        => 188,
       'image'          => 'https://images.unsplash.com/photo-1544816155-12387ec4a497?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -514,8 +470,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 7999,
       'original_price' => 9999,
       'discount'       => 20,
-      'rating'         => 4.9,
-      'reviews'        => 156,
       'image'          => 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -536,8 +490,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 3299,
       'original_price' => 4299,
       'discount'       => 23,
-      'rating'         => 4.5,
-      'reviews'        => 94,
       'image'          => 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -559,8 +511,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 9999,
       'original_price' => 12999,
       'discount'       => 23,
-      'rating'         => 4.8,
-      'reviews'        => 78,
       'image'          => 'https://images.unsplash.com/photo-1585123334904-845d60c6a760?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -583,8 +533,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 2999,
       'original_price' => 3999,
       'discount'       => 25,
-      'rating'         => 4.7,
-      'reviews'        => 167,
       'image'          => 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -605,8 +553,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 3499,
       'original_price' => 4499,
       'discount'       => 22,
-      'rating'         => 4.9,
-      'reviews'        => 128,
       'image'          => 'https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -628,8 +574,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 1899,
       'original_price' => 2499,
       'discount'       => 24,
-      'rating'         => 4.6,
-      'reviews'        => 210,
       'image'          => 'https://images.unsplash.com/photo-1554188248-986adbb73ad1?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -649,8 +593,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 2799,
       'original_price' => 3699,
       'discount'       => 24,
-      'rating'         => 4.8,
-      'reviews'        => 140,
       'image'          => 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -671,8 +613,6 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       'price'          => 1499,
       'original_price' => 1999,
       'discount'       => 25,
-      'rating'         => 4.7,
-      'reviews'        => 310,
       'image'          => 'https://images.unsplash.com/photo-1606503153255-59d8b8b82176?auto=format&fit=crop&w=800&q=80',
       'secondary_image'=> 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80',
       'colors'         => [
@@ -809,18 +749,22 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
       $db = novaDb();
       $count = (int) $db->query('SELECT COUNT(*) FROM products')->fetchColumn();
       if ($count === 0) {
-        $insert = $db->prepare('INSERT INTO products (id, name, category, price, original_price, discount, rating, reviews, image, secondary_image, colors_json, sizes_json, stock, description, badge, created_at, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $insert = $db->prepare('INSERT INTO products (id, name, category, price, original_price, discount, image, secondary_image, colors_json, sizes_json, stock, description, badge, created_at, featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         foreach ($NOVA_PRODUCTS as $product) {
           $insert->execute([
             $product['id'], $product['name'], $product['category'], $product['price'], $product['original_price'] ?? null,
-            $product['discount'] ?? null, $product['rating'] ?? 0, $product['reviews'] ?? 0, $product['image'],
+            $product['discount'] ?? null, $product['image'],
             $product['secondary_image'] ?? null, json_encode(nova_normalize_colors($product['colors'] ?? [])), json_encode($product['sizes'] ?? []),
             $product['stock'] ?? 0, $product['description'] ?? null, $product['badge'] ?? null, $product['created_at'] ?? null,
             !empty($product['featured']) ? 1 : 0,
           ]);
         }
       }
-      $rows = $db->query('SELECT id, name, category, price, original_price, discount, rating, reviews, image, secondary_image, colors_json, sizes_json, stock, description, badge, created_at, featured FROM products ORDER BY id ASC')->fetchAll();
+      $rows = $db->query('SELECT p.id, p.name, p.category, p.price, p.original_price, p.discount, '
+        . 'COALESCE((SELECT AVG(pr.rating) FROM product_reviews pr WHERE pr.product_id = p.id), 0) AS rating, '
+        . '(SELECT COUNT(*) FROM product_reviews pr WHERE pr.product_id = p.id) AS reviews, '
+        . 'p.image, p.secondary_image, p.colors_json, p.sizes_json, p.stock, p.description, p.badge, p.created_at, p.featured '
+        . 'FROM products p ORDER BY p.id ASC')->fetchAll();
       $databaseProducts = array_map(function (array $row): array {
         $row['id'] = (int) $row['id'];
         $row['price'] = (float) $row['price'];
@@ -848,7 +792,12 @@ if (!defined('NOVA_PRODUCTS_DATA_LOADED')) {
   function getAllProducts(): array {
     global $NOVA_PRODUCTS;
     $dbProducts = getDatabaseProducts();
-    return (!empty($dbProducts)) ? $dbProducts : $NOVA_PRODUCTS;
+    if (!empty($dbProducts)) return $dbProducts;
+    return array_map(function (array $product): array {
+      $product['rating'] = 0;
+      $product['reviews'] = 0;
+      return $product;
+    }, $NOVA_PRODUCTS);
   }
 
   function getProductById(int $id): ?array {

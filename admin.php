@@ -79,11 +79,11 @@ $isAdmin = !empty($_SESSION['nova_admin']);
 $activeTab = 'dashboard';
 $flash = null;
 $metrics = ['revenue'=>0,'orders'=>0,'customers'=>0,'products'=>0,'lowStock'=>0];
-$recentOrders = []; $allOrders = []; $adminProducts = []; $customers = [];
+$recentOrders = []; $allOrders = []; $adminProducts = []; $adminReviews = []; $customers = [];
 $siteContentSections = []; $categories = [];
 
 if ($isAdmin) {
-    $adminTabs = ['dashboard','orders','products','customers','site-content','categories'];
+    $adminTabs = ['dashboard','orders','products','reviews','customers','site-content','categories'];
     $activeTab = in_array($_GET['tab'] ?? 'dashboard', $adminTabs, true) ? (string)($_GET['tab'] ?? 'dashboard') : 'dashboard';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -98,6 +98,16 @@ if ($isAdmin) {
                     $flashMsg = $s->rowCount()>0 ? 'Order #' . $oid . ' marked as ' . ucfirst($st) . '.' : 'Already that status.';
                 } else { $flashMsg = 'Invalid order request.'; $flashType = 'error'; }
             }
+            elseif ($action === 'delete_review') {
+                $reviewId = (int)($_POST['review_id'] ?? 0);
+                if ($reviewId > 0) {
+                    $db = novaDb();
+                    $s = $db->prepare('DELETE FROM product_reviews WHERE id=?');
+                    $s->execute([$reviewId]);
+                    $flashMsg = $s->rowCount() > 0 ? 'Review deleted.' : 'Review not found.';
+                    if ($s->rowCount() === 0) { $flashType = 'error'; }
+                } else { $flashMsg = 'Invalid review request.'; $flashType = 'error'; }
+            }
             elseif ($action === 'update_product') {
                 $pid = (int)($_POST['product_id'] ?? 0); $price = (float)($_POST['price'] ?? 0); $stock = (int)($_POST['stock'] ?? -1); $feat = isset($_POST['featured']) ? 1 : 0;
                 if ($pid>0 && $price>0 && $price<=10000000 && $stock>=0 && $stock<=1000000) {
@@ -111,8 +121,6 @@ if ($isAdmin) {
                 $pCategory = trim((string)($_POST['category'] ?? ''));
                 $pPrice = (float)($_POST['price'] ?? 0);
                 $pOriginal = (float)($_POST['original_price'] ?? 0);
-                $pRating = max(0, min(5, (float)($_POST['rating'] ?? 0)));
-                $pReviews = max(0, (int)($_POST['reviews'] ?? 0));
                 $pImage = trim((string)($_POST['image'] ?? ''));
                 $pSecondary = trim((string)($_POST['secondary_image'] ?? ''));
 
@@ -201,12 +209,12 @@ if ($isAdmin) {
                     $pDiscount = ($pOriginal > 0 && $pOriginal > $pPrice) ? (int)round((($pOriginal - $pPrice) / $pOriginal) * 100) : null;
                     $db = novaDb();
                     if ($pid > 0) {
-                        $s = $db->prepare('UPDATE products SET name=?, category=?, price=?, original_price=?, discount=?, rating=?, reviews=?, image=?, secondary_image=?, colors_json=?, sizes_json=?, stock=?, description=?, badge=?, featured=?, updated_at=CURRENT_TIMESTAMP WHERE id=?');
-                        $s->execute([$pName, $pCategory, $pPrice, $pOriginal > 0 ? $pOriginal : null, $pDiscount, $pRating, $pReviews, $pImage, $pSecondary !== '' ? $pSecondary : null, $colorsJson, $sizesJson, $pStock, $pDescription !== '' ? $pDescription : null, $pBadge !== '' ? $pBadge : null, $pFeatured, $pid]);
+                        $s = $db->prepare('UPDATE products SET name=?, category=?, price=?, original_price=?, discount=?, image=?, secondary_image=?, colors_json=?, sizes_json=?, stock=?, description=?, badge=?, featured=?, updated_at=CURRENT_TIMESTAMP WHERE id=?');
+                        $s->execute([$pName, $pCategory, $pPrice, $pOriginal > 0 ? $pOriginal : null, $pDiscount, $pImage, $pSecondary !== '' ? $pSecondary : null, $colorsJson, $sizesJson, $pStock, $pDescription !== '' ? $pDescription : null, $pBadge !== '' ? $pBadge : null, $pFeatured, $pid]);
                         $flashMsg = 'Product "' . $pName . '" (#' . $pid . ') updated successfully.';
                     } else {
-                        $s = $db->prepare('INSERT INTO products (name, category, price, original_price, discount, rating, reviews, image, secondary_image, colors_json, sizes_json, stock, description, badge, featured, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURDATE(),CURRENT_TIMESTAMP)');
-                        $s->execute([$pName, $pCategory, $pPrice, $pOriginal > 0 ? $pOriginal : null, $pDiscount, $pRating, $pReviews, $pImage, $pSecondary !== '' ? $pSecondary : null, $colorsJson, $sizesJson, $pStock, $pDescription !== '' ? $pDescription : null, $pBadge !== '' ? $pBadge : null, $pFeatured]);
+                        $s = $db->prepare('INSERT INTO products (name, category, price, original_price, discount, image, secondary_image, colors_json, sizes_json, stock, description, badge, featured, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,CURDATE(),CURRENT_TIMESTAMP)');
+                        $s->execute([$pName, $pCategory, $pPrice, $pOriginal > 0 ? $pOriginal : null, $pDiscount, $pImage, $pSecondary !== '' ? $pSecondary : null, $colorsJson, $sizesJson, $pStock, $pDescription !== '' ? $pDescription : null, $pBadge !== '' ? $pBadge : null, $pFeatured]);
                         $newId = (int)$db->lastInsertId();
                         $flashMsg = 'Product "' . $pName . '" (#' . $newId . ') added to catalog successfully.';
                     }
@@ -277,7 +285,8 @@ if ($isAdmin) {
         $metrics['lowStock']=(int)$db->query('SELECT COUNT(*) FROM products WHERE stock<10')->fetchColumn();
         $recentOrders=$db->query('SELECT o.id,o.customer_name,o.total_amount,o.status,o.created_at,(SELECT COUNT(*) FROM order_items WHERE order_id=o.id) AS ic FROM orders o ORDER BY o.created_at DESC LIMIT 5')->fetchAll();
         $allOrders=$db->query('SELECT o.id,o.customer_name,o.phone,o.total_amount,o.status,o.created_at,(SELECT COUNT(*) FROM order_items WHERE order_id=o.id) AS ic FROM orders o ORDER BY o.created_at DESC')->fetchAll();
-        $adminProducts=$db->query('SELECT * FROM products ORDER BY id DESC')->fetchAll();
+        $adminProducts=$db->query('SELECT p.*, COALESCE((SELECT AVG(r.rating) FROM product_reviews r WHERE r.product_id=p.id),0) AS live_rating, (SELECT COUNT(*) FROM product_reviews r WHERE r.product_id=p.id) AS live_reviews FROM products p ORDER BY p.id DESC')->fetchAll();
+        $adminReviews=$db->query('SELECT r.id,r.product_id,r.user_id,r.rating,r.review_text,r.created_at,u.name AS reviewer_name,p.name AS product_name FROM product_reviews r JOIN users u ON u.id=r.user_id JOIN products p ON p.id=r.product_id ORDER BY r.created_at DESC,r.id DESC')->fetchAll();
         $customers=$db->query('SELECT u.id,u.name,u.email,u.created_at,COUNT(o.id) AS oc,COALESCE(SUM(o.total_amount),0) AS lv FROM users u LEFT JOIN orders o ON o.user_id=u.id GROUP BY u.id ORDER BY u.created_at DESC')->fetchAll();
         $siteContentSections=$db->query('SELECT section,html_content,updated_at FROM site_content ORDER BY section ASC')->fetchAll();
         $categories=$db->query('SELECT * FROM categories ORDER BY sort_order ASC')->fetchAll();
@@ -442,6 +451,7 @@ function dSizes($r){ $d=json_decode($r,true); return is_array($d)?$d:[]; }
       <a href="admin.php?tab=dashboard" class="<?= $activeTab==='dashboard'?'active':'' ?>">Dashboard</a>
       <a href="admin.php?tab=orders" class="<?= $activeTab==='orders'?'active':'' ?>">Orders</a>
       <a href="admin.php?tab=products" class="<?= $activeTab==='products'?'active':'' ?>">Products</a>
+      <a href="admin.php?tab=reviews" class="<?= $activeTab==='reviews'?'active':'' ?>">Reviews</a>
       <a href="admin.php?tab=customers" class="<?= $activeTab==='customers'?'active':'' ?>">Customers</a>
       <a href="admin.php?tab=site-content" class="<?= $activeTab==='site-content'?'active':'' ?>">Site Content</a>
       <a href="admin.php?tab=categories" class="<?= $activeTab==='categories'?'active':'' ?>">Categories</a>
@@ -557,11 +567,6 @@ function dSizes($r){ $d=json_decode($r,true); return is_array($d)?$d:[]; }
               <input type="number" name="original_price" min="0" step="0.01" placeholder="e.g. 2999.00 (optional)" value="<?= $editProduct && $editProduct['original_price'] ? number_format((float)$editProduct['original_price'], 2, '.', '') : '' ?>">
               <p class="form-hint">Set original price to auto-calculate discount %.</p>
 
-              <label>Rating (0.00 - 5.00)</label>
-              <input type="number" name="rating" min="0" max="5" step="0.01" value="<?= $editProduct ? number_format((float)$editProduct['rating'], 2, '.', '') : '0.00' ?>">
-
-              <label>Review Count</label>
-              <input type="number" name="reviews" min="0" step="1" value="<?= $editProduct ? (int)$editProduct['reviews'] : '0' ?>">
             </div>
 
             <div class="admin-form-card">
@@ -641,7 +646,7 @@ function dSizes($r){ $d=json_decode($r,true); return is_array($d)?$d:[]; }
           </div>
           <div class="prod-meta">
             Stock: <strong class="<?= (int)$p['stock'] < 10 ? 'admin-low' : 'admin-ok' ?>"><?= (int)$p['stock'] ?></strong>
-            &middot; <?= (int)$p['reviews'] ?> reviews &middot; &#9733;<?= number_format((float)$p['rating'], 1) ?>
+            &middot; <?= (int)$p['live_reviews'] ?> reviews &middot; &#9733;<?= number_format((float)$p['live_rating'], 1) ?>
           </div>
           <div class="prod-actions" style="margin-top:0.75rem;">
             <a href="admin.php?tab=products&edit=<?= (int)$p['id'] ?>#product-form-section" class="admin-btn sm btn-edit">Edit</a>
@@ -690,6 +695,37 @@ function dSizes($r){ $d=json_decode($r,true); return is_array($d)?$d:[]; }
         }
       })();
     </script>
+
+    <?php elseif ($activeTab === 'reviews'): ?>
+    <section class="admin-section">
+      <div class="admin-section-heading"><div><p>Moderation</p><h2>Product Reviews (<?= count($adminReviews) ?>)</h2></div></div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr><th>Product</th><th>Reviewer</th><th>Rating</th><th>Review</th><th>Date</th><th>Action</th></tr></thead>
+          <tbody>
+            <?php foreach ($adminReviews as $review): ?>
+            <?php $reviewSnippet = (string) ($review['review_text'] ?? ''); ?>
+            <tr>
+              <td><a href="product.php?id=<?= (int)$review['product_id'] ?>" target="_blank"><?= htmlspecialchars($review['product_name']) ?></a></td>
+              <td><?= htmlspecialchars($review['reviewer_name']) ?></td>
+              <td><?= (int)$review['rating'] ?> / 5</td>
+              <td><?= $reviewSnippet !== '' ? htmlspecialchars(substr($reviewSnippet, 0, 250)) . (strlen($reviewSnippet) > 250 ? '…' : '') : '<span class="admin-muted">Rating only</span>' ?></td>
+              <td class="admin-muted"><?= htmlspecialchars(date('d M Y, H:i', strtotime($review['created_at']))) ?></td>
+              <td>
+                <form method="post" onsubmit="return confirm('Delete this customer review?');">
+                  <?= nova_csrf_field() ?>
+                  <input type="hidden" name="action" value="delete_review">
+                  <input type="hidden" name="review_id" value="<?= (int)$review['id'] ?>">
+                  <button type="submit" class="admin-btn sm danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+            <?php if (!$adminReviews): ?><tr><td colspan="6" class="admin-muted">No customer reviews have been submitted yet.</td></tr><?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <?php elseif ($activeTab === 'orders'): ?>
     <section class="admin-section">

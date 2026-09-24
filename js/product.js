@@ -40,7 +40,6 @@
     pinInput: document.querySelector('.pin-input'),
     pinCheckBtn: document.querySelector('.pin-check-btn'),
     pinMessage: document.querySelector('.pin-message'),
-    reviewForm: document.getElementById('review-form'),
     wishlistBtn: document.getElementById('wishlist-btn'),
     readMore: document.querySelector('.btn-read-more'),
     productDescription: document.querySelector('.product-description'),
@@ -267,25 +266,6 @@
       const icon = trigger.querySelector('.accordion-icon');
       if (icon) icon.textContent = isOpen ? '+' : '−';
     });
-  });
-
-  selector.reviewForm?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = new FormData(selector.reviewForm);
-    const name = (formData.get('name') || '').toString().trim();
-    const review = (formData.get('review') || '').toString().trim();
-    if (!name || !review) return;
-    const button = selector.reviewForm.querySelector('button[type="submit"]');
-    if (button) {
-      const originalText = button.textContent;
-      button.textContent = 'Review Submitted';
-      button.disabled = true;
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.disabled = false;
-        selector.reviewForm.reset();
-      }, 1500);
-    }
   });
 
   const sizeGuideTrigger = document.querySelector('.size-guide-trigger');

@@ -1,7 +1,10 @@
 <?php
 require_once __DIR__ . '/config/constants.php';
+require_once __DIR__ . '/config/bootstrap.php';
 require_once __DIR__ . '/includes/products-data.php';
 require_once __DIR__ . '/includes/product-card.php';
+
+nova_session_start();
 
 function buildProductGallery(array $product): array {
   $gallery = [];
@@ -96,6 +99,51 @@ if (!$product) {
   $titleLabel = htmlspecialchars($product['category']);
 }
 
+$reviewMessage = '';
+$reviewMessageType = 'success';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'submit_product_review') {
+  $reviewStatus = 'invalid';
+  if (!$product) {
+    $reviewStatus = 'missing';
+  } elseif (empty($_SESSION['nova_user']['id'])) {
+    $reviewStatus = 'login';
+  } elseif (!nova_csrf_verify($_POST)) {
+    $reviewStatus = 'csrf';
+  } else {
+    $submittedRating = filter_var($_POST['rating'] ?? null, FILTER_VALIDATE_INT);
+    $submittedText = trim((string) ($_POST['review_text'] ?? ''));
+    if ($submittedRating === false || $submittedRating < 1 || $submittedRating > 5 || strlen($submittedText) > 5000) {
+      $reviewStatus = 'invalid';
+    } else {
+      try {
+        $saveReview = novaDb()->prepare(
+          'INSERT INTO product_reviews (product_id, user_id, rating, review_text) VALUES (?, ?, ?, ?) '
+          . 'ON DUPLICATE KEY UPDATE rating = VALUES(rating), review_text = VALUES(review_text), created_at = CURRENT_TIMESTAMP'
+        );
+        $saveReview->execute([(int) $product['id'], (int) $_SESSION['nova_user']['id'], $submittedRating, $submittedText !== '' ? $submittedText : null]);
+        $reviewStatus = 'saved';
+      } catch (Throwable $error) {
+        error_log('NOVA review save error: ' . $error->getMessage());
+        $reviewStatus = 'error';
+      }
+    }
+  }
+  header('Location: product.php?id=' . (int) ($product['id'] ?? $id ?? 0) . '&review_status=' . $reviewStatus . '#reviews');
+  exit;
+}
+
+$reviewStatuses = [
+  'saved' => ['Your review has been saved.', 'success'],
+  'login' => ['Please log in to write a review.', 'error'],
+  'csrf' => ['Your session expired. Please try submitting your review again.', 'error'],
+  'invalid' => ['Choose a rating from 1 to 5 and keep your review under 5,000 characters.', 'error'],
+  'error' => ['Your review could not be saved. Please try again.', 'error'],
+  'missing' => ['This product is unavailable for review.', 'error'],
+];
+if (isset($reviewStatuses[$_GET['review_status'] ?? ''])) {
+  [$reviewMessage, $reviewMessageType] = $reviewStatuses[$_GET['review_status']];
+}
+
 $gallery = $product ? buildProductGallery($product) : [];
 $category = $product ? $product['category'] : 'Shop';
 $relatedProducts = $product ? array_values(array_filter(getAllProducts(), function ($p) use ($product) {
@@ -122,7 +170,41 @@ if (empty($recentlyViewed) && $product) {
   $recentlyViewed = array_slice($recentlyViewed, 0, 4);
 }
 
-$reviewCount = (int) ($product['reviews'] ?? 128);
+$reviewAverage = 0.0;
+$reviewCount = 0;
+$ratingCounts = array_fill_keys([1, 2, 3, 4, 5], 0);
+$productReviews = [];
+$userReview = null;
+if ($product) {
+  try {
+    $reviewDb = novaDb();
+    $statsQuery = $reviewDb->prepare('SELECT COALESCE(AVG(rating), 0) AS average_rating, COUNT(*) AS review_count FROM product_reviews WHERE product_id = ?');
+    $statsQuery->execute([(int) $product['id']]);
+    $reviewStats = $statsQuery->fetch();
+    $reviewAverage = (float) ($reviewStats['average_rating'] ?? 0);
+    $reviewCount = (int) ($reviewStats['review_count'] ?? 0);
+
+    $distributionQuery = $reviewDb->prepare('SELECT rating, COUNT(*) AS rating_count FROM product_reviews WHERE product_id = ? GROUP BY rating');
+    $distributionQuery->execute([(int) $product['id']]);
+    foreach ($distributionQuery->fetchAll() as $distribution) {
+      $ratingCounts[(int) $distribution['rating']] = (int) $distribution['rating_count'];
+    }
+
+    $reviewsQuery = $reviewDb->prepare('SELECT r.rating, r.review_text, r.created_at, u.name FROM product_reviews r JOIN users u ON u.id = r.user_id WHERE r.product_id = ? ORDER BY r.created_at DESC, r.id DESC LIMIT 10');
+    $reviewsQuery->execute([(int) $product['id']]);
+    $productReviews = $reviewsQuery->fetchAll();
+
+    if (!empty($_SESSION['nova_user']['id'])) {
+      $userReviewQuery = $reviewDb->prepare('SELECT rating, review_text FROM product_reviews WHERE product_id = ? AND user_id = ? LIMIT 1');
+      $userReviewQuery->execute([(int) $product['id'], (int) $_SESSION['nova_user']['id']]);
+      $userReview = $userReviewQuery->fetch() ?: null;
+    }
+  } catch (Throwable $error) {
+    error_log('NOVA review load error: ' . $error->getMessage());
+    $reviewMessage = 'Customer reviews are temporarily unavailable.';
+    $reviewMessageType = 'error';
+  }
+}
 $stockStatus = ($product['stock'] ?? 0) <= 0 ? 'Out of Stock' : (($product['stock'] ?? 0) <= 5 ? 'Only ' . (int) $product['stock'] . ' left' : 'In Stock');
 $currency = NOVA_CURRENCY_SYMBOL;
 $hasDiscount = !empty($product['original_price']) && (int) $product['original_price'] > (int) $product['price'];
@@ -199,13 +281,13 @@ $discountValue = $hasDiscount ? (int) ($product['discount'] ?? round((($product[
             <h1 class="product-detail-title"><?= htmlspecialchars($product['name']) ?></h1>
 
             <div class="product-summary-row">
-              <div class="product-stars" aria-label="Rated <?= number_format($product['rating'], 1) ?> out of 5">
+              <div class="product-stars" aria-label="Rated <?= number_format($reviewAverage, 1) ?> out of 5">
                 <?php for ($i = 1; $i <= 5; $i++): ?>
-                  <svg viewBox="0 0 24 24" fill="<?= $i <= round((float) $product['rating']) ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  <svg viewBox="0 0 24 24" fill="<?= $i <= round($reviewAverage) ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 <?php endfor; ?>
               </div>
-              <span class="product-review-value"><?= number_format((float) $product['rating'], 1) ?></span>
-              <a href="#reviews" class="product-review-link">(<?= (int) $product['reviews'] ?> reviews)</a>
+              <span class="product-review-value"><?= number_format($reviewAverage, 1) ?></span>
+              <a href="#reviews" class="product-review-link">(<?= $reviewCount ?> reviews)</a>
             </div>
 
             <div class="product-price-block">
@@ -371,40 +453,40 @@ $discountValue = $hasDiscount ? (int) ($product['discount'] ?? round((($product[
 
     <section class="reviews-section" id="reviews">
       <div class="nova-container">
+        <?php if ($reviewMessage !== ''): ?>
+          <div class="review-form-message <?= $reviewMessageType === 'error' ? 'is-error' : 'is-success' ?>" role="status"><?= htmlspecialchars($reviewMessage) ?></div>
+        <?php endif; ?>
         <div class="reviews-summary-row">
           <div class="review-score-block">
             <p class="section-eyebrow">Customer Reviews</p>
             <div class="review-score-line">
-              <span class="review-score-number"><?= number_format((float) $product['rating'], 1) ?></span>
+              <span class="review-score-number"><?= number_format($reviewAverage, 1) ?></span>
               <span class="review-score-outof">/ 5</span>
             </div>
-            <div class="product-stars review-stars" aria-label="Average rating <?= number_format((float) $product['rating'], 1) ?> out of 5">
+            <div class="product-stars review-stars" aria-label="Average rating <?= number_format($reviewAverage, 1) ?> out of 5">
               <?php for ($i = 1; $i <= 5; $i++): ?>
-                <svg viewBox="0 0 24 24" fill="<?= $i <= round((float) $product['rating']) ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <svg viewBox="0 0 24 24" fill="<?= $i <= round($reviewAverage) ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
               <?php endfor; ?>
             </div>
-            <p class="review-caption">Based on <?= (int) $product['reviews'] ?> reviews</p>
+            <p class="review-caption">Based on <?= $reviewCount ?> reviews</p>
           </div>
 
           <div class="rating-breakdown" aria-label="Rating distribution">
             <?php foreach ([5, 4, 3, 2, 1] as $star): ?>
               <div class="rating-row">
                 <span><?= $star ?> ★</span>
-                <div class="rating-bar"><span style="width: <?= $star === 5 ? '82%' : ($star === 4 ? '12%' : ($star === 3 ? '4%' : ($star === 2 ? '2%' : '0%'))) ?>;"></span></div>
+                <div class="rating-bar"><span style="width: <?= $reviewCount > 0 ? round(($ratingCounts[$star] / $reviewCount) * 100, 1) : 0 ?>%;"></span></div>
+                <span class="rating-count"><?= $ratingCounts[$star] ?></span>
               </div>
             <?php endforeach; ?>
           </div>
         </div>
 
         <div class="reviews-list">
-          <?php
-          $reviews = [
-            ['name' => 'Rahul K.', 'date' => '2 days ago', 'text' => 'Premium quality and the fit is excellent. The material feels luxe without being overdone.', 'rating' => 5, 'verified' => true],
-            ['name' => 'Nisha S.', 'date' => '1 week ago', 'text' => 'Stylish and comfortable. It looks elevated and feels like a premium wardrobe piece.', 'rating' => 5, 'verified' => true],
-            ['name' => 'Aarav M.', 'date' => '3 weeks ago', 'text' => 'The craftsmanship is great and the color looks even better in person. Well worth it.', 'rating' => 4, 'verified' => false],
-          ];
-          foreach ($reviews as $review):
-          ?>
+          <?php if ($reviewCount === 0): ?>
+            <p class="review-empty-state">No reviews yet — be the first to review this product.</p>
+          <?php endif; ?>
+          <?php foreach ($productReviews as $review): ?>
             <article class="review-card">
               <div class="review-top-row">
                 <div class="review-stars" aria-label="Rated <?= $review['rating'] ?> out of 5">
@@ -412,44 +494,44 @@ $discountValue = $hasDiscount ? (int) ($product['discount'] ?? round((($product[
                     <svg viewBox="0 0 24 24" fill="<?= $i <= $review['rating'] ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                   <?php endfor; ?>
                 </div>
-                <?php if ($review['verified']): ?>
-                  <span class="verified-badge">Verified Purchase</span>
-                <?php endif; ?>
               </div>
               <div class="review-meta">
                 <strong><?= htmlspecialchars($review['name']) ?></strong>
-                <span><?= htmlspecialchars($review['date']) ?></span>
+                <span><?= htmlspecialchars(date('d M Y', strtotime($review['created_at']))) ?></span>
               </div>
-              <p class="review-content">“<?= htmlspecialchars($review['text']) ?>”</p>
+              <?php if ($review['review_text'] !== null && trim($review['review_text']) !== ''): ?>
+                <p class="review-content">“<?= htmlspecialchars($review['review_text']) ?>”</p>
+              <?php endif; ?>
             </article>
           <?php endforeach; ?>
         </div>
 
         <div class="review-form-block">
-          <h3>Write a Review</h3>
-          <form class="review-form" id="review-form">
+          <?php if (!empty($_SESSION['nova_user']['id'])): ?>
+          <h3><?= $userReview ? 'Update Your Review' : 'Write a Review' ?></h3>
+          <form class="review-form" id="review-form" method="post" action="product.php?id=<?= (int) $product['id'] ?>#reviews">
+            <?= nova_csrf_field() ?>
+            <input type="hidden" name="action" value="submit_product_review">
             <div class="review-form-grid">
-              <label>
-                <span>Name</span>
-                <input type="text" name="name" placeholder="Your name" required>
-              </label>
               <label>
                 <span>Rating</span>
                 <select name="rating" aria-label="Select your rating">
-                  <option value="5">5 ★</option>
-                  <option value="4">4 ★</option>
-                  <option value="3">3 ★</option>
-                  <option value="2">2 ★</option>
-                  <option value="1">1 ★</option>
+                  <?php for ($ratingOption = 5; $ratingOption >= 1; $ratingOption--): ?>
+                    <option value="<?= $ratingOption ?>"<?= (int) ($userReview['rating'] ?? 5) === $ratingOption ? ' selected' : '' ?>><?= $ratingOption ?> ★</option>
+                  <?php endfor; ?>
                 </select>
               </label>
             </div>
             <label>
-              <span>Review</span>
-              <textarea name="review" rows="5" placeholder="Tell us about your experience" required></textarea>
+              <span>Review (optional)</span>
+              <textarea name="review_text" rows="5" maxlength="5000" placeholder="Tell us about your experience"><?= htmlspecialchars($userReview['review_text'] ?? '') ?></textarea>
             </label>
-            <button type="submit" class="btn btn-primary">Submit Review</button>
+            <button type="submit" class="btn btn-primary"><?= $userReview ? 'Update Review' : 'Submit Review' ?></button>
           </form>
+          <?php else: ?>
+            <h3>Write a Review</h3>
+            <p><button type="button" class="js-account-open" data-account-mode="signin">Log in to write a review</button></p>
+          <?php endif; ?>
         </div>
       </div>
     </section>
