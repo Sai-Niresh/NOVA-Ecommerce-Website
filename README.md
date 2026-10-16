@@ -4,7 +4,17 @@
 
 ## Project Overview
 
-**NOVA** is a full-featured fashion & lifestyle e-commerce platform: homepage, shop with search/filters, product detail pages, cart & wishlist, guest/user checkout, order tracking, and a secure admin dashboard — built with plain PHP 8 + MySQL (no frameworks, no build step).
+**NOVA** is a full-featured fashion & lifestyle e-commerce platform: homepage, shop with search/filters, product detail pages, cart & wishlist, guest/user checkout, order tracking, and a secure adm[...] 
+
+---
+
+## Live demo
+
+[![Vercel](https://img.shields.io/badge/Hosted_on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://REPLACE_WITH_VERCEL_URL)
+
+Visit the live demo: https://REPLACE_WITH_VERCEL_URL
+
+(Replace the placeholder URL above with your actual Vercel deployment URL, or tell me and I’ll update it.)
 
 ---
 
@@ -70,7 +80,7 @@ C:\xampp\php\php.exe -S localhost:8000 -t C:\xampp\htdocs\NOVA-Ecommerce
 Then open `http://localhost:8000/`.
 
 ### Admin dashboard
-`http://localhost/NOVA-Ecommerce/admin.php` — demo credentials: **admin@nova.local / admin123** (override via `NOVA_ADMIN_EMAIL` / `NOVA_ADMIN_PASSWORD` env vars). Database credentials can be overridden with `NOVA_DB_HOST`, `NOVA_DB_NAME`, `NOVA_DB_USER`, `NOVA_DB_PASSWORD`.
+`http://localhost/NOVA-Ecommerce/admin.php` — demo credentials: **admin@nova.local / admin123** (override via `NOVA_ADMIN_EMAIL` / `NOVA_ADMIN_PASSWORD` env vars). Database credentials can be ov[...]
 
 ---
 
