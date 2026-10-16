@@ -10,11 +10,9 @@
 
 ## Live demo
 
-[![Vercel](https://img.shields.io/badge/Hosted_on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://REPLACE_WITH_VERCEL_URL)
+[![Vercel](https://img.shields.io/badge/Hosted_on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://nova-ecommerce-website-olive.vercel.app)
 
-Visit the live demo: https://REPLACE_WITH_VERCEL_URL
-
-(Replace the placeholder URL above with your actual Vercel deployment URL, or tell me and I’ll update it.)
+Visit the live demo: https://nova-ecommerce-website-olive.vercel.app
 
 ---
 
